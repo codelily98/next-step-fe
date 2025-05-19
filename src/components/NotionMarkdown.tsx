@@ -8,12 +8,12 @@ import styles from "../css/components/NotionMarkdown.module.css"; // CSS 모듈 
 
 interface NotionMarkdownProps {
     project: Project;
-    onClose: () => void;
+    //onClose: () => void;
 }
 
 const NotionMarkdown: React.FC<NotionMarkdownProps> = ({
     project,
-    onClose,
+    //onClose,
 }) => {
     return (
         <div className={styles.container}>
