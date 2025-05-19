@@ -1,0 +1,178 @@
+/* NotionMarkdown.module.css */
+.container {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    line-height: 1.5;
+    color: #37352f;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.description {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+.metadata {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #f7f6f3;
+    border-radius: 0.5rem;
+}
+
+.metadataItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.metadataLabel {
+    font-weight: 600;
+    color: #787774;
+}
+
+.metadataValue {
+    color: #37352f;
+}
+
+.stack {
+    margin-bottom: 2rem;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.tag {
+    background-color: #ebeae8;
+    color: #37352f;
+    padding: 0.3rem 0.8rem;
+    border-radius: 0.3rem;
+    font-size: 0.9rem;
+}
+
+.content {
+    margin-top: 2rem;
+}
+
+.h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid #ebeae8;
+}
+
+.h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.p {
+    margin-bottom: 1rem;
+}
+
+.ul,
+.ol {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+}
+
+.li {
+    margin-bottom: 0.5rem;
+}
+
+.link {
+    color: #0b6bcb;
+    text-decoration: none;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
+.inlineCode {
+    background-color: #f7f6f3;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.3rem;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.9em;
+}
+
+.codeBlock {
+    background-color: #f7f6f3;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+}
+
+.codeBlock code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.9em;
+    display: block;
+    white-space: pre;
+}
+
+.strong {
+    font-weight: 700;
+}
+
+/* 다크 모드 지원 */
+@media (prefers-color-scheme: dark) {
+    .container {
+        color: #e6e6e6;
+        background-color: #191919;
+    }
+
+    .metadata {
+        background-color: #262626;
+    }
+
+    .metadataLabel {
+        color: #b3b3b3;
+    }
+
+    .metadataValue {
+        color: #e6e6e6;
+    }
+
+    .tag {
+        background-color: #333333;
+        color: #e6e6e6;
+    }
+
+    .h2 {
+        border-bottom-color: #333333;
+    }
+
+    .link {
+        color: #559ddf;
+    }
+
+    .inlineCode {
+        background-color: #262626;
+    }
+
+    .codeBlock {
+        background-color: #262626;
+    }
+}

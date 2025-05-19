@@ -1,0 +1,80 @@
+.skillItem {
+    display: inline-block;
+    margin: 10px;
+    padding: 8px 16px;
+    background: #222;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.skillItem:hover {
+    background-color: #4ecdc4;
+    color: #000;
+}
+
+.modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal {
+    background-color: #1e1e1e;
+    padding: 24px;
+    border-radius: 10px;
+    max-width: 400px;
+    width: 90%;
+    color: #fff;
+}
+
+.modal p {
+    color: #fff;
+    font-size: 16px;
+    padding-top: 1rem;
+}
+
+.closeBtn {
+    margin-top: 20px;
+    padding: 8px 16px;
+    background-color: #4ecdc4;
+    border: none;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.logo {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    margin-bottom: 16px;
+}
+
+.link {
+    display: inline-block;
+    margin-top: 12px;
+    color: #4ecdc4;
+    font-weight: bold;
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+
+.link:hover {
+    color: #00d1b2;
+}
+
+.function {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

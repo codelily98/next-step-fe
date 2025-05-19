@@ -1,0 +1,182 @@
+.about {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    color: #fff;
+    background-color: #000;
+}
+
+.title {
+    color: #fff;
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 32px;
+}
+
+.intro {
+    color: #fff;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+.profile {
+    width: 160px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #ccc;
+}
+
+.description h2 {
+    color: #fff;
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+.description p {
+    color: #fff;
+    font-size: 16px;
+}
+
+.section {
+    margin-bottom: 40px;
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 6px;
+    border-top: 6px solid #006080;
+}
+
+.section h3 {
+    font-size: 22px;
+    margin-bottom: 12px;
+    color: #4ecdc4;
+}
+
+.section p {
+    color: #fff;
+    margin-bottom: 6px;
+    line-height: 1.6;
+}
+
+.section .line {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.certTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+}
+
+.certTable th,
+.certTable td {
+    border: 1px solid #666;
+    padding: 10px;
+    text-align: left;
+    color: #fff;
+}
+
+.certTable th {
+    background-color: #222;
+    color: #4ecdc4;
+}
+
+/* 전체 skills 섹션 영역 */
+.skillsSection {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #1a1a1a;
+    border-radius: 6px;
+    border-top: 6px solid #006080;
+}
+
+/* 카테고리별 그룹 묶음 */
+.skillGroup {
+    margin-bottom: 32px;
+}
+
+/* 각 카테고리 제목 (프로그래밍 언어, 프론트엔드 등) */
+.skillCategory {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #4ecdc4;
+    border-left: 4px solid #4ecdc4;
+    padding-left: 12px;
+}
+
+.subSkillCategory {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #4ecdc4;
+    padding-left: 12px;
+}
+
+/* 각 스킬 아이템을 그리드로 나열 */
+.skillGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* 📱 모바일 반응형 */
+@media (max-width: 768px) {
+    .about {
+        padding: 24px 16px;
+    }
+
+    .intro {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .profile {
+        width: 210px;
+        height: 280px;
+    }
+
+    .description h2 {
+        font-size: 18px;
+    }
+
+    .description p {
+        font-size: 15px;
+    }
+
+    .title {
+        font-size: 24px;
+    }
+
+    .section h3 {
+        font-size: 20px;
+    }
+
+    .certTable th,
+    .certTable td {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .skillsSection {
+        padding: 16px;
+    }
+
+    .skillCategory {
+        font-size: 18px;
+        padding-left: 8px;
+    }
+
+    .skillGrid {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .skillGroup {
+        margin-bottom: 24px;
+    }
+}

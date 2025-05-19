@@ -1,0 +1,13 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- 배경 원 -->
+  <circle cx="32" cy="32" r="30" fill="#4ecdc4" />
+
+  <!-- 중앙 심볼 (길게 뻗은 연꽃 싹 느낌) -->
+  <path d="M32 14 Q36 24 32 34 Q28 24 32 14" fill="#ffffff"/>
+  <circle cx="32" cy="34" r="2.5" fill="#ffffff" />
+
+  <!-- 하단 문구: y=45 -->
+  <text x="32" y="45" font-family="cursive, sans-serif" font-size="9" fill="#ffffff" text-anchor="middle" dominant-baseline="middle" letter-spacing="1">
+    N.S.C
+  </text>
+</svg>

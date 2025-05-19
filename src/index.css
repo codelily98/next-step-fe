@@ -1,0 +1,68 @@
+/* -----------------------------------
+   기본 Reset 스타일
+------------------------------------ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* HTML5 요소 디스플레이 초기화 */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+    display: block;
+}
+
+/* body 기본 폰트, 색상 등 초기화 */
+body {
+    font-family: "Nanum Gothic", sans-serif;
+    line-height: 1.6;
+    background-color: #ffffff;
+    color: #333;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* 링크 초기화 */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* 리스트 초기화 */
+ol,
+ul {
+    list-style: none;
+}
+
+/* 이미지, 버튼 등 기타 요소 */
+img {
+    max-width: 100%;
+    display: block;
+}
+
+button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+/* 폼 요소 기본 스타일 제거 */
+input,
+textarea,
+select {
+    font: inherit;
+    outline: none;
+    border: none;
+    background: none;
+}

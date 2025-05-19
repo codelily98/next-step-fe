@@ -1,0 +1,160 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background-color: #1e1e1e;
+    color: white;
+    position: relative;
+    height: 4rem;
+}
+
+@keyframes gradientMove {
+    0% {
+        background-position: 0% center;
+    }
+    100% {
+        background-position: 200% center;
+    }
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    color: #ffffff; /* 기본 색상 */
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+}
+
+/* hover 시 그라데이션 + 애니메이션 적용 */
+.logo:hover {
+    background-image: linear-gradient(
+        90deg,
+        #ff6ec4,
+        #f093fb,
+        #c3ec52,
+        #4ecdc4,
+        #38b2ac,
+        #7873f5,
+        #ff6ec4
+    );
+    background-size: 300% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientMove 4s linear infinite;
+}
+
+/* 공통 네비게이션 */
+.nav {
+    display: flex;
+    align-items: center; /* nav 내부 항목 수직 정렬 */
+    gap: 20px;
+}
+
+.link {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s;
+    display: flex;
+    align-items: center; /* 링크 텍스트 정렬 */
+}
+
+.link:hover {
+    color: #4ecdc4;
+}
+
+/* 햄버거 메뉴 - 모바일만 보임 */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.bar {
+    width: 24px;
+    height: 3px;
+    background-color: white;
+    border-radius: 2px;
+    transition: transform 0.4s ease, opacity 0.3s ease;
+    transform-origin: center;
+}
+
+/* 햄버거 오픈 상태 (X 아이콘) */
+.open .bar:nth-child(1) {
+    transform: rotate(45deg) translate(10px, 1px);
+    transition-delay: 0s;
+}
+
+.open .bar:nth-child(2) {
+    opacity: 0;
+    transition-delay: 0.1s;
+}
+
+.open .bar:nth-child(3) {
+    transform: rotate(-45deg) translate(10px, -1px);
+    transition-delay: 0.2s;
+}
+
+/* bounce-out 애니메이션 */
+.hamburger:not(.open) .bar {
+    animation: bounceOut 0.3s ease;
+}
+
+.login {
+    margin-left: auto;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #4ecdc4;
+    padding: 6px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.login:hover {
+    background-color: #38b2ac;
+}
+
+/* 반응형 설정 */
+@media (max-width: 768px) {
+    .nav {
+        position: absolute;
+        top: 64px;
+        right: 0;
+        flex-direction: column;
+        justify-content: center;
+        align-items: start;
+        background-color: #1e1e1e;
+        padding: 16px;
+        display: none;
+        width: 100%;
+        z-index: 10;
+    }
+
+    .nav.active {
+        display: flex;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    .login {
+        margin-left: 0;
+        margin-top: 8px;
+        background-color: #333;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+    }
+}
