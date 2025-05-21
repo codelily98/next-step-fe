@@ -63,9 +63,9 @@ const Home = () => {
                 <strong className={styles.strong}> JWT(Json Web Token)</strong>
                 을 이용한 사용자 인증을 처리하며,{" "}
                 <strong className={styles.strong}>카카오</strong> 및{" "}
-                <strong>구글</strong> 소셜 로그인을 위한{" "}
-                <strong className={styles.strong}>OAuth 2.0</strong> 인증 방식도
-                함께 적용하고 있습니다.
+                <strong className={styles.strong}>구글</strong> 소셜 로그인을
+                위한 <strong className={styles.strong}>OAuth 2.0</strong> 인증
+                방식도 함께 적용하고 있습니다.
             </p>
             <p className={styles.p}>
                 데이터 관리는 <strong className={styles.strong}>MariaDB</strong>
