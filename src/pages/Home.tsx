@@ -69,8 +69,8 @@ const Home = () => {
             </p>
             <p className={styles.p}>
                 데이터 관리는 <strong className={styles.strong}>MariaDB</strong>
-                와 <strong>Redis</strong>를 연동하여 처리하고 있으며, 전체
-                프로젝트는{" "}
+                와 <strong className={styles.strong}>Redis</strong>를 연동하여
+                처리하고 있으며, 전체 프로젝트는{" "}
                 <strong className={styles.strong}>반응형 UX/UI</strong>와 실무에
                 가까운 <strong className={styles.strong}>풀스택 구성</strong>을
                 목표로 제작되었습니다.
