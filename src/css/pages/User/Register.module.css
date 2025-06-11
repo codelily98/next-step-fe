@@ -123,10 +123,10 @@
 .formGroup input {
     width: 100%;
     padding: 12px; /* 패딩 증가 */
-    border: 1px solid #444; /* 어두운 배경에 맞는 보더 */
+    border: 1px solid #555; /* 어두운 배경에 맞는 보더 */
     border-radius: 30px; /* 더 부드러운 모서리 */
     box-sizing: border-box;
-    background-color: #333; /* 인풋 배경색 */
+    background-color: #444; /* 인풋 배경색 */
     color: #f1f1f1; /* 인풋 텍스트 색상 */
     font-size: 1rem;
 }
