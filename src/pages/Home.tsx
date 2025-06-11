@@ -1,7 +1,12 @@
 import { useEffect } from "react";
 import styles from "../css/pages/Home.module.css";
+import useAuthStore from "../store/AuthStore";
 
 const Home = () => {
+    // AuthStore에서 필요한 상태들을 가져옵니다.
+    const { isAuthenticated, user, accessToken, refreshToken } = useAuthStore();
+    const username = user?.username; // user가 null일 경우를 대비하여 옵셔널 체이닝 사용
+
     useEffect(() => {
         // About 페이지 진입 시
         document.body.style.backgroundColor = "#111";
@@ -24,7 +29,17 @@ const Home = () => {
                     <div className={styles.title}>Next Step: CodeLily</div>
                 </div>
             </header>
-            <h1 className={styles.h1}>방문을 환영합니다!</h1>
+
+            {/* ⭐ 로그인 상태에 따라 다른 환영 메시지 표시 ⭐ */}
+            {isAuthenticated && username ? ( // user?.username 대신 username 변수 사용
+                <h1 className={styles.h1}>
+                    <span className={styles.strong}>{username}</span>님
+                    환영합니다!
+                </h1>
+            ) : (
+                <h1 className={styles.h1}>방문을 환영합니다!</h1>
+            )}
+
             <p className={styles.p}>
                 이 사이트는 웹 개발자로서의 저를 소개하는 포트폴리오
                 페이지입니다.
@@ -61,19 +76,41 @@ const Home = () => {
                 <strong className={styles.strong}>Spring Boot</strong>를
                 사용하고 있으며,
                 <strong className={styles.strong}> JWT(Json Web Token)</strong>
-                을 이용한 사용자 인증을 처리하며,{" "}
-                <strong className={styles.strong}>카카오</strong> 및{" "}
+                와 <strong className={styles.strong}> SpringSecurity</strong>를
+                이용한 사용자 인증을 처리하고 있습니다.
+                {/* <strong className={styles.strong}>카카오</strong> 및{" "}
                 <strong className={styles.strong}>구글</strong> 소셜 로그인을
                 위한 <strong className={styles.strong}>OAuth 2.0</strong> 인증
-                방식도 함께 적용하고 있습니다.
+                방식도 함께 적용하고 있습니다. */}
             </p>
             <p className={styles.p}>
-                데이터 관리는 <strong className={styles.strong}>MariaDB</strong>
-                와 <strong className={styles.strong}>Redis</strong>를 연동하여
+                데이터 관리는 <strong className={styles.strong}>MySQL</strong>과{" "}
+                <strong className={styles.strong}>Redis</strong>를 연동하여
                 처리하고 있으며, 전체 프로젝트는{" "}
                 <strong className={styles.strong}>반응형 UX/UI</strong>와 실무에
                 가까운 <strong className={styles.strong}>풀스택 구성</strong>을
                 목표로 제작되었습니다.
+            </p>
+
+            <p className={styles.p}>
+                배포는{" "}
+                <strong className={styles.strong}>
+                    GCP(GoogleCloud Platform)
+                </strong>
+                을 기반으로{" "}
+                <strong className={styles.strong}>VM 인스턴스</strong>를
+                활용하여 컴퓨팅 환경을 구성하고{" "}
+                <strong className={styles.strong}>Docker</strong>환경에{" "}
+                <strong className={styles.strong}>Jenkins</strong>와{" "}
+                <strong className={styles.strong}>Git의 웹훅</strong> 연동을
+                통한 코드 변경을 감지를 통한{" "}
+                <strong className={styles.strong}>CI/CD</strong> 자동화
+                파이프라인을 구축하고{" "}
+                <strong className={styles.strong}>FE</strong>는{" "}
+                <strong className={styles.strong}>Nginx</strong>를 이용해서
+                서빙하고 있고, <strong className={styles.strong}>BE</strong>는{" "}
+                <strong className={styles.strong}>JAR</strong> 파일로 빌드히여
+                운영하고 있습니다.
             </p>
         </div>
     );

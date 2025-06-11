@@ -91,6 +91,39 @@
     font-weight: 600;
 }
 
+.tokenInfo {
+    margin-top: 30px;
+    padding: 15px;
+    background-color: #2a2a2a;
+    border-radius: 8px;
+    font-size: 0.9em;
+    /* word-break: break-all; 이거 이미 추가하셨네요! */
+}
+
+.tokenInfo .tokenTitle {
+    font-size: 1.5rem;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #4ecdc4;
+}
+
+.tokenInfo .p {
+    margin-bottom: 5px;
+    color: #ccc;
+}
+
+.tokenInfo .strong {
+    color: #4ecdc4;
+}
+
+.tokenValue {
+    color: #fff;
+    word-break: break-all; /* 단어의 중간이라도 강제로 줄바꿈 */
+    /* word-wrap: break-word; 또는 overflow-wrap: break-word; 도 유사하게 작동합니다. */
+    /* 다만, 가장 강력하게 동작하는 것은 break-all 입니다. */
+}
+
 /* ✅ 반응형 (모바일 대응) */
 @media (max-width: 768px) {
     .container {
@@ -98,7 +131,7 @@
     }
 
     .h1 {
-        font-size: 28px;
+        font-size: 1.2rem;
     }
 
     .p {

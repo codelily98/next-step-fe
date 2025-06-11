@@ -29,6 +29,13 @@ export const categorizedSkills: SkillCategory[] = [
                 logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
                 link: "https://developer.mozilla.org/ko/docs/Web/JavaScript",
             },
+            {
+                name: "TypeScript",
+                description:
+                    "JavaScript에 타입을 추가하여 안정성과 확장성을 높인 언어입니다.",
+                logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
+                link: "https://www.typescriptlang.org/",
+            },
         ],
     },
     {

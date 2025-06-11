@@ -18,12 +18,11 @@ const LoginPage: React.FC = () => {
         setError(null);
 
         try {
-            const response = await api.post("/auth/login", {
+            const response = await api.post("/api/auth/login", {
                 username,
                 password,
             });
             const { accessToken, refreshToken } = response.data;
-            console.log("로그인 성공:", response.data);
 
             login(accessToken, refreshToken, username);
 

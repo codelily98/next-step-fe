@@ -18,7 +18,7 @@ const RegisterPage: React.FC = () => {
         setSuccess(null);
 
         try {
-            const response = await api.post("/auth/register", {
+            const response = await api.post("/api/auth/register", {
                 username,
                 password,
             });
@@ -85,11 +85,7 @@ const RegisterPage: React.FC = () => {
                             required
                         />
                     </div>
-                    <button
-                        type="submit"
-                        onClick={handleRegister}
-                        className={styles.submitButton}
-                    >
+                    <button type="submit" className={styles.submitButton}>
                         회원가입
                     </button>{" "}
                     {/* 클래스 이름 적용 */}
