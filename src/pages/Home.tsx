@@ -4,7 +4,7 @@ import useAuthStore from "../store/AuthStore";
 
 const Home = () => {
     // AuthStore에서 필요한 상태들을 가져옵니다.
-    const { isAuthenticated, user, accessToken, refreshToken } = useAuthStore();
+    const { isAuthenticated, user } = useAuthStore();
     const username = user?.username; // user가 null일 경우를 대비하여 옵셔널 체이닝 사용
 
     useEffect(() => {
