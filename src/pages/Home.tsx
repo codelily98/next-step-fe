@@ -93,7 +93,7 @@ const Home = () => {
             </p>
 
             <p className={styles.p}>
-                배포는{" "}
+                우선 <strong className={styles.strong}>FE</strong>는{" "}
                 <strong className={styles.strong}>
                     GCP(GoogleCloud Platform)
                 </strong>
@@ -106,11 +106,11 @@ const Home = () => {
                 통한 코드 변경을 감지를 통한{" "}
                 <strong className={styles.strong}>CI/CD</strong> 자동화
                 파이프라인을 구축하고{" "}
-                <strong className={styles.strong}>FE</strong>는{" "}
                 <strong className={styles.strong}>Nginx</strong>를 이용해서
                 서빙하고 있고, <strong className={styles.strong}>BE</strong>는{" "}
-                <strong className={styles.strong}>JAR</strong> 파일로 빌드히여
-                운영하고 있습니다.
+                <strong className={styles.strong}>GitHub Actions</strong>를
+                이용하여 <strong className={styles.strong}>VM 인스턴스</strong>
+                에 CI/CD를 자동화시켜 운영하고 있습니다.
             </p>
         </div>
     );
