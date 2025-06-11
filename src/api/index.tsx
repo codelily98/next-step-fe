@@ -3,14 +3,14 @@ import axios from "axios";
 // import useAuthStore from "../store/AuthStore";
 
 const API_BASE_URL =
-    import.meta.env.VITE_APP_API_BASE_URL ||
-    "https://portfolio-nextstep.info:8080";
+    import.meta.env.VITE_APP_API_BASE_URL || "https://portfolio-nextstep.info";
 
 const api = axios.create({
     baseURL: API_BASE_URL,
     headers: {
         "Content-Type": "application/json",
     },
+    withCredentials: true,
 });
 
 // 요청 인터셉터: 모든 요청에 Access Token 추가
