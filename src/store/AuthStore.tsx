@@ -1,43 +1,56 @@
+// src/store/AuthStore.tsx
 import { create } from "zustand";
-import { persist, PersistOptions } from "zustand/middleware";
 
-type User = {
-    id: string;
-    email: string;
-    nickname: string;
-    role: string;
-};
-
-type AuthState = {
-    user: User | null;
-    isLoggedIn: boolean;
-    setUser: (user: User) => void;
+interface AuthState {
+    accessToken: string | null;
+    refreshToken: string | null;
+    isAuthenticated: boolean;
+    user: { username: string } | null;
+    login: (
+        accessToken: string,
+        refreshToken: string,
+        username: string
+    ) => void;
     logout: () => void;
-};
+    setAccessToken: (token: string) => void;
+}
 
-// persist 옵션 타입을 추가로 확장해서 타입 충돌 해결
-type AuthStore = PersistOptions<
-    AuthState,
-    {
-        user: User | null;
-        isLoggedIn: boolean;
-    }
->;
+const useAuthStore = create<AuthState>((set) => ({
+    accessToken: localStorage.getItem("accessToken") || null,
+    refreshToken: localStorage.getItem("refreshToken") || null,
+    isAuthenticated: !!localStorage.getItem("accessToken"), // 새로고침 시에도 로그인 상태 유지
+    user: localStorage.getItem("username")
+        ? { username: localStorage.getItem("username")! }
+        : null,
 
-export const useAuthStore = create<AuthState>()(
-    persist(
-        (set) => ({
+    login: (accessToken, refreshToken, username) => {
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+        localStorage.setItem("username", username);
+        set({
+            accessToken,
+            refreshToken,
+            isAuthenticated: true,
+            user: { username },
+        });
+    },
+
+    logout: () => {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("username");
+        set({
+            accessToken: null,
+            refreshToken: null,
+            isAuthenticated: false,
             user: null,
-            isLoggedIn: false,
-            setUser: (user) => set({ user, isLoggedIn: true }),
-            logout: () => set({ user: null, isLoggedIn: false }),
-        }),
-        {
-            name: "auth-storage",
-            partialize: (state) => ({
-                user: state.user,
-                isLoggedIn: state.isLoggedIn,
-            }),
-        } as AuthStore // 🔥 여기서 타입 확장 강제 지정
-    )
-);
+        });
+    },
+
+    setAccessToken: (token: string) => {
+        localStorage.setItem("accessToken", token);
+        set({ accessToken: token });
+    },
+}));
+
+export default useAuthStore;
