@@ -1,11 +1,9 @@
 // src/api/index.ts (또는 src/utils/api.ts)
 import axios from "axios";
 
-// 백엔드 API의 기본 URL을 설정합니다.
-// 개발 환경에서는 로컬 백엔드 주소를 사용하고, 배포 시에는 실제 서버 주소로 변경합니다.
-// .env 파일을 사용하여 환경 변수로 관리하는 것이 좋습니다.
+// Vite에서는 import.meta.env를 사용하고, 환경 변수 이름 앞에 VITE_ 접두사가 붙어야 합니다.
 const API_BASE_URL =
-    process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080"; // 또는 React App의 경우 process.env.REACT_APP_API_BASE_URL
+    import.meta.env.VITE_APP_API_BASE_URL || "http://localhost:8080";
 
 const api = axios.create({
     baseURL: API_BASE_URL,

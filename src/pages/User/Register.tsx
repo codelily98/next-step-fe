@@ -1,8 +1,8 @@
 // src/pages/RegisterPage.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import api from "../../api/index";
-import { useNavigate } from "react-router-dom";
-import styles from "./RegisterPage.module.css"; // CSS 모듈 임포트
+import { Link, useNavigate } from "react-router-dom";
+import styles from "../../css/pages/User/Register.module.css";
 
 const RegisterPage: React.FC = () => {
     const [username, setUsername] = useState<string>("");
@@ -46,51 +46,70 @@ const RegisterPage: React.FC = () => {
     };
 
     return (
-        <div className={styles.registerContainer}>
-            {" "}
-            {/* 클래스 이름 적용 */}
-            <h2 className={styles.title}>회원가입</h2> {/* 클래스 이름 적용 */}
-            <form onSubmit={handleRegister}>
-                <div className={styles.formGroup}>
-                    {" "}
+        <div className={styles.container}>
+            <div className={styles.registerContainer}>
+                <header className={styles.header}>
+                    <Link className={styles.label} to="/">
+                        <img
+                            className={styles.logo}
+                            src="./favicon.svg"
+                            alt="logo"
+                        />
+                        <div className={styles.mainTitle}>
+                            Next Step: CodeLily
+                        </div>
+                    </Link>
+                </header>
+                <form className={styles.formDiv} onSubmit={handleRegister}>
+                    <div className={styles.formGroup}>
+                        {" "}
+                        {/* 클래스 이름 적용 */}
+                        <label htmlFor="username">아이디:</label>
+                        <input
+                            type="text"
+                            id="username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className={styles.formGroup}>
+                        {" "}
+                        {/* 클래스 이름 적용 */}
+                        <label htmlFor="password">비밀번호:</label>
+                        <input
+                            type="password"
+                            id="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        onClick={handleRegister}
+                        className={styles.submitButton}
+                    >
+                        회원가입
+                    </button>{" "}
                     {/* 클래스 이름 적용 */}
-                    <label htmlFor="username">아이디:</label>
-                    <input
-                        type="text"
-                        id="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className={styles.formGroup}>
-                    {" "}
+                </form>
+                <div className={styles.result}>
+                    {error && <p className={styles.errorMessage}>{error}</p>}{" "}
                     {/* 클래스 이름 적용 */}
-                    <label htmlFor="password">비밀번호:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
+                    {success && (
+                        <p className={styles.successMessage}>{success}</p>
+                    )}{" "}
                 </div>
-                <button type="submit" className={styles.submitButton}>
-                    회원가입
-                </button>{" "}
                 {/* 클래스 이름 적용 */}
-            </form>
-            {error && <p className={styles.errorMessage}>{error}</p>}{" "}
-            {/* 클래스 이름 적용 */}
-            {success && <p className={styles.successMessage}>{success}</p>}{" "}
-            {/* 클래스 이름 적용 */}
-            <p>
-                이미 계정이 있으신가요?{" "}
-                <a href="/login" className={styles.link}>
-                    로그인
-                </a>{" "}
-                {/* 클래스 이름 적용 */}
-            </p>
+                <div className={styles.linkBox}>
+                    <p className={styles.linkText}>이미 계정이 있으신가요? </p>
+                    <a href="/login" className={styles.link}>
+                        로그인
+                    </a>{" "}
+                    {/* 클래스 이름 적용 */}
+                </div>
+            </div>
         </div>
     );
 };
