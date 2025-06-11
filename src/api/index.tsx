@@ -3,7 +3,8 @@ import axios from "axios";
 // import useAuthStore from "../store/AuthStore";
 
 const API_BASE_URL =
-    import.meta.env.VITE_APP_API_BASE_URL || "http://localhost:8080";
+    import.meta.env.VITE_APP_API_BASE_URL ||
+    "https://portfolio-nextstep.info:8080";
 
 const api = axios.create({
     baseURL: API_BASE_URL,
