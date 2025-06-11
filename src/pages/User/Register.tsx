@@ -1,5 +1,5 @@
 // src/pages/RegisterPage.tsx
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import api from "../../api/index";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../../css/pages/User/Register.module.css";
