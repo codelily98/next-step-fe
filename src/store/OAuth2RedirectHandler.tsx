@@ -51,8 +51,8 @@ const OAuth2RedirectHandler: React.FC = () => {
                     <div className={styles["modal-content"]}>
                         <div className={styles.spinner}></div>{" "}
                         {/* 하이픈이 없을 경우 점 표기법 사용 가능 */}
-                        <p>소셜 로그인 처리 중입니다.</p>
-                        <p>잠시만 기다려 주세요...</p>
+                        <p className={styles.p}>소셜 로그인 처리 중입니다.</p>
+                        <p className={styles.p}>잠시만 기다려 주세요...</p>
                     </div>
                 </div>
             )}

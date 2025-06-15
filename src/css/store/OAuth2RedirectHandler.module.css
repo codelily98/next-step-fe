@@ -25,10 +25,11 @@
     gap: 15px; /* 요소들 사이 간격 */
 }
 
-.modal-content p {
+.modal-content .p {
     margin: 0; /* 기본 마진 제거 */
     font-size: 1.1em;
     font-weight: 500;
+    color: #fff;
 }
 
 /* 로딩 스피너 스타일 */
