@@ -1,25 +1,41 @@
-// src/pages/LoginPage.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import api from "../../api/index";
 import useAuthStore from "../../store/AuthStore";
-import { useNavigate, Link } from "react-router-dom";
-import styles from "../../css/pages/User/LoginPage.module.css"; // CSS 모듈 임포트
+import { useNavigate, Link, useLocation } from "react-router-dom";
+import styles from "../../css/pages/User/LoginPage.module.css";
 
 const LoginPage: React.FC = () => {
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const login = useAuthStore((state) => state.login);
     const navigate = useNavigate();
+    const location = useLocation();
 
     const API_BASE_URL =
         import.meta.env.VITE_APP_API_BASE_URL ||
         "https://api.portfolio-nextstep.info";
 
+    // OAuth2 에러 메시지 처리 (기존 로직 유지)
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const oauthError = queryParams.get("error");
+
+        if (oauthError) {
+            setError(decodeURIComponent(oauthError));
+        } else {
+            if (!error) {
+                setError(null);
+            }
+        }
+    }, [location.search]);
+
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
+        setIsLoading(true);
 
         try {
             const response = await api.post("/api/auth/login", {
@@ -30,7 +46,10 @@ const LoginPage: React.FC = () => {
 
             login(accessToken, username);
 
-            navigate("/");
+            setTimeout(() => {
+                setIsLoading(false);
+                navigate("/");
+            }, 1000);
         } catch (err: any) {
             console.error("로그인 실패:", err);
             if (err.response && err.response.status === 401) {
@@ -44,16 +63,33 @@ const LoginPage: React.FC = () => {
             } else {
                 setError("로그인 중 오류가 발생했습니다.");
             }
+            setIsLoading(false);
         }
     };
 
     const handleKakaoLogin = () => {
-        // 로그인 요청 시 OAuth2 인증 엔드포인트로 리다이렉트
         window.location.href = `${API_BASE_URL}/oauth2/authorization/kakao`;
+    };
+
+    // ✅ Link (a 태그) 클릭 이벤트 핸들러 추가
+    const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        if (isLoading) {
+            e.preventDefault(); // 로딩 중이면 링크 클릭 막기
+        }
     };
 
     return (
         <div className={styles.container}>
+            {isLoading && (
+                <div className={styles["modal-overlay"]}>
+                    <div className={styles["modal-content"]}>
+                        <div className={styles.spinner}></div>
+                        <p className={styles.p}>로그인 처리 중입니다.</p>
+                        <p className={styles.p}>잠시만 기다려 주세요...</p>
+                    </div>
+                </div>
+            )}
+
             <div className={styles.loginContainer}>
                 <header className={styles.header}>
                     <Link className={styles.label} to="/">
@@ -69,8 +105,6 @@ const LoginPage: React.FC = () => {
                 </header>
                 <form className={styles.formDiv} onSubmit={handleLogin}>
                     <div className={styles.formGroup}>
-                        {" "}
-                        {/* 클래스 이름 적용 */}
                         <label htmlFor="username">아이디:</label>
                         <input
                             type="text"
@@ -78,11 +112,10 @@ const LoginPage: React.FC = () => {
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             required
+                            disabled={isLoading}
                         />
                     </div>
                     <div className={styles.formGroup}>
-                        {" "}
-                        {/* 클래스 이름 적용 */}
                         <label htmlFor="password">비밀번호:</label>
                         <input
                             type="password"
@@ -90,31 +123,40 @@ const LoginPage: React.FC = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
+                            disabled={isLoading}
                         />
                     </div>
-                    <button type="submit" className={styles.submitButton}>
+                    <button
+                        type="submit"
+                        className={styles.submitButton}
+                        disabled={isLoading}
+                    >
                         로그인
-                    </button>{" "}
-                    {/* 클래스 이름 적용 */}
+                    </button>
                 </form>
                 <div className={styles.result}>
-                    {error && <p className={styles.errorMessage}>{error}</p>}{" "}
+                    {error && <p className={styles.errorMessage}>{error}</p>}
                 </div>
 
-                {/* 클래스 이름 적용 */}
                 <div className={styles.linkBox}>
                     <p className={styles.linkText}>계정이 없으신가요? </p>
-                    <a href="/register" className={styles.link}>
+                    {/* ✅ Link 컴포넌트에 onClick과 className 추가 */}
+                    <Link
+                        to="/register"
+                        className={`${styles.link} ${
+                            isLoading ? styles.disabledLink : ""
+                        }`}
+                        onClick={handleLinkClick}
+                    >
                         회원가입
-                    </a>{" "}
-                    {/* 클래스 이름 적용 */}
+                    </Link>
                 </div>
 
-                {/* ✅ 카카오 로그인 버튼 */}
                 <div className={styles.kakaoLoginBox}>
                     <button
                         onClick={handleKakaoLogin}
                         className={styles.kakaoLoginButton}
+                        disabled={isLoading}
                     >
                         카카오 로그인
                     </button>
