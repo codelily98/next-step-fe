@@ -1,45 +1,62 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuthStore from "../store/AuthStore";
+import styles from "./OAuth2RedirectHandler.module.css"; // ⭐ CSS 모듈 임포트 방식 변경
 
 const OAuth2RedirectHandler: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    // ✅ login 함수와 setKakaoLoginStatus 함수를 함께 가져옴
     const login = useAuthStore((state) => state.login);
     const setKakaoLoginStatus = useAuthStore(
         (state) => state.setKakaoLoginStatus
     );
 
+    const [isLoading, setIsLoading] = useState(true);
+
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
         const accessToken = queryParams.get("accessToken");
-        // ✅ 백엔드에서 username을 함께 넘겨주도록 하는 것이 좋습니다.
         const username = queryParams.get("username");
         const error = queryParams.get("error");
 
         if (accessToken) {
             console.log("OAuth2 로그인 성공! Access Token:", accessToken);
-            // ✅ AuthStore의 login 함수를 사용하여 accessToken과 username 모두 저장
-            // 백엔드에서 username이 오지 않는다면 '카카오 사용자' 등으로 기본값 설정
-            login(accessToken, username || "카카오 사용자");
-            // ✅ 카카오 로그인임을 명시적으로 설정
-            setKakaoLoginStatus(true);
 
-            navigate("/");
+            const timer = setTimeout(() => {
+                login(accessToken, username || "카카오 사용자");
+                setKakaoLoginStatus(true);
+                setIsLoading(false);
+                navigate("/");
+            }, 1000);
+
+            return () => clearTimeout(timer);
         } else if (error) {
             console.error("OAuth2 로그인 실패:", error);
+            setIsLoading(false);
             navigate(`/login?error=${encodeURIComponent(error)}`);
         } else {
             console.warn("OAuth2 리다이렉션에 토큰 또는 에러 정보가 없습니다.");
+            setIsLoading(false);
             navigate("/login?error=unknown_oauth2_error");
         }
-    }, [location, navigate, login, setKakaoLoginStatus]); // ✅ 의존성 배열 업데이트
+    }, [location, navigate, login, setKakaoLoginStatus]);
 
     return (
-        <div>
-            <p>소셜 로그인 처리 중입니다. 잠시만 기다려 주세요...</p>
-        </div>
+        <>
+            {isLoading && (
+                // ⭐ 클래스 이름 적용 방식 변경: styles.클래스이름
+                <div className={styles["modal-overlay"]}>
+                    {" "}
+                    {/* 하이픈이 있을 경우 대괄호 표기법 사용 */}
+                    <div className={styles["modal-content"]}>
+                        <div className={styles.spinner}></div>{" "}
+                        {/* 하이픈이 없을 경우 점 표기법 사용 가능 */}
+                        <p>소셜 로그인 처리 중입니다.</p>
+                        <p>잠시만 기다려 주세요...</p>
+                    </div>
+                </div>
+            )}
+        </>
     );
 };
 
