@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuthStore from "../store/AuthStore";
-import styles from "./OAuth2RedirectHandler.module.css"; // ⭐ CSS 모듈 임포트 방식 변경
+import styles from "../css/store/OAuth2RedirectHandler.module.css";
 
 const OAuth2RedirectHandler: React.FC = () => {
     const location = useLocation();
