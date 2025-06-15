@@ -110,7 +110,8 @@ const Home = () => {
                 서빙하고 있고, <strong className={styles.strong}>BE</strong>는{" "}
                 <strong className={styles.strong}>GitHub Actions</strong>를
                 이용하여 <strong className={styles.strong}>VM 인스턴스</strong>
-                에 CI/CD를 자동화시켜 운영하고 있습니다.
+                에 <strong className={styles.strong}>CI/CD</strong>를 자동화시켜
+                운영하고 있습니다.
             </p>
         </div>
     );
