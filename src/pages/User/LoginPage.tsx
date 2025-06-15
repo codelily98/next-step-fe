@@ -26,9 +26,9 @@ const LoginPage: React.FC = () => {
                 username,
                 password,
             });
-            const { accessToken, refreshToken } = response.data;
+            const { accessToken } = response.data;
 
-            login(accessToken, refreshToken, username);
+            login(accessToken, username);
 
             navigate("/");
         } catch (err: any) {

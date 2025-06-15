@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const Info = () => {
     // AuthStore에서 필요한 상태들을 가져옵니다.
-    const { isAuthenticated, user, accessToken, refreshToken } = useAuthStore();
+    const { isAuthenticated, user, accessToken } = useAuthStore();
     const username = user?.username; // user가 null일 경우를 대비하여 옵셔널 체이닝 사용
 
     const navigate = useNavigate();
@@ -40,7 +40,7 @@ const Info = () => {
                             Refresh Token:
                         </strong>{" "}
                         <span className={styles.tokenValue}>
-                            {refreshToken || "서버에서 Cookie로 발급"}
+                            {"서버에서 Cookie로 발급"}
                         </span>
                     </p>
                     {/* 필요하다면 토큰 디코딩 값도 표시 가능 */}
