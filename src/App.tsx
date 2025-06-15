@@ -30,7 +30,7 @@ function App() {
                 <Route path="/register" element={<RegisterPage />} />
                 {/* ✅ 카카오 로그인 성공/실패 시 백엔드에서 리다이렉트될 경로 */}
                 <Route
-                    path="/oauth2/callback"
+                    path="/oauth2/redirect"
                     element={<OAuth2RedirectHandler />}
                 />
             </Routes>
