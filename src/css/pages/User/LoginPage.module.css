@@ -192,6 +192,32 @@
     border-radius: 5px;
 }
 
+/* LoginPage.module.css 하단에 추가 */
+.kakaoLoginBox {
+    margin-top: 20px;
+    text-align: center;
+    display: flex;
+    width: 100%;
+}
+
+.kakaoLoginButton {
+    width: 100%;
+    padding: 12px; /* 패딩 증가 */
+    background-color: #fee500; /* CloseBtn 배경색 참고 */
+    color: #000; /* CloseBtn 텍스트 색상 참고 */
+    border: none;
+    border-radius: 30px; /* 모서리 둥글게 */
+    cursor: pointer;
+    font-size: 1rem; /* 약간 키움 */
+    font-weight: bold; /* CloseBtn 폰트 굵기 참고 */
+    margin-top: 20px; /* 위쪽 여백 */
+    transition: background-color 0.2s ease; /* 호버 효과 부드럽게 */
+}
+
+.kakaoLoginButton:hover {
+    background-color: #e2d23ea2;
+}
+
 @media (max-width: 1024px) {
     .loginContainer {
         width: 100%;

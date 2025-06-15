@@ -13,6 +13,10 @@ const LoginPage: React.FC = () => {
     const login = useAuthStore((state) => state.login);
     const navigate = useNavigate();
 
+    const API_BASE_URL =
+        import.meta.env.VITE_APP_API_BASE_URL ||
+        "https://api.portfolio-nextstep.info";
+
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
@@ -41,6 +45,11 @@ const LoginPage: React.FC = () => {
                 setError("로그인 중 오류가 발생했습니다.");
             }
         }
+    };
+
+    const handleKakaoLogin = () => {
+        // 로그인 요청 시 OAuth2 인증 엔드포인트로 리다이렉트
+        window.location.href = `${API_BASE_URL}/oauth2/authorization/kakao`;
     };
 
     return (
@@ -91,6 +100,7 @@ const LoginPage: React.FC = () => {
                 <div className={styles.result}>
                     {error && <p className={styles.errorMessage}>{error}</p>}{" "}
                 </div>
+
                 {/* 클래스 이름 적용 */}
                 <div className={styles.linkBox}>
                     <p className={styles.linkText}>계정이 없으신가요? </p>
@@ -98,6 +108,16 @@ const LoginPage: React.FC = () => {
                         회원가입
                     </a>{" "}
                     {/* 클래스 이름 적용 */}
+                </div>
+
+                {/* ✅ 카카오 로그인 버튼 */}
+                <div className={styles.kakaoLoginBox}>
+                    <button
+                        onClick={handleKakaoLogin}
+                        className={styles.kakaoLoginButton}
+                    >
+                        카카오 로그인
+                    </button>
                 </div>
             </div>
         </div>
