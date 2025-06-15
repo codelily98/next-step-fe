@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
+import useAuthStore from "../store/AuthStore";
 
 const API_BASE_URL =
     import.meta.env.VITE_APP_API_BASE_URL ||
@@ -15,7 +16,8 @@ const api = axios.create({
 // 요청 인터셉터: Access Token 자동 첨부
 api.interceptors.request.use(
     (config) => {
-        const accessToken = localStorage.getItem("accessToken");
+        // ✅ localStorage 대신 Zustand 스토어의 accessToken 사용
+        const accessToken = useAuthStore.getState().accessToken;
         if (accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`;
         }
@@ -33,7 +35,12 @@ api.interceptors.response.use(
         };
 
         // 토큰 만료로 401이 발생했고, 아직 재시도한 적 없는 요청이라면
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        // refresh-token 엔드포인트 자체에 대한 401은 재시도하지 않음 (무한 루프 방지)
+        if (
+            error.response?.status === 401 &&
+            !originalRequest._retry &&
+            originalRequest.url !== `${API_BASE_URL}/api/auth/refresh-token`
+        ) {
             originalRequest._retry = true;
 
             try {
@@ -46,8 +53,9 @@ api.interceptors.response.use(
 
                 const newAccessToken = res.data.accessToken;
                 if (newAccessToken) {
-                    // 새 accessToken 저장
-                    localStorage.setItem("accessToken", newAccessToken);
+                    // ✅ 새 accessToken을 Zustand 스토어에도 업데이트
+                    useAuthStore.getState().setAccessToken(newAccessToken);
+                    // localStorage.setItem("accessToken", newAccessToken); // Zustand persist가 처리하므로 불필요
 
                     // 헤더 업데이트 후 요청 재시도
                     originalRequest.headers = {
@@ -58,10 +66,10 @@ api.interceptors.response.use(
                     return api(originalRequest);
                 }
             } catch (refreshError) {
-                console.error("❌ 토큰 갱신 실패", refreshError);
-                // 로그아웃 처리 또는 로그인 페이지로 이동
-                localStorage.removeItem("accessToken");
-                window.location.href = "/login"; // 필요시 수정
+                console.error("❌ 토큰 갱신 실패:", refreshError);
+                // 갱신 실패 시 useAuthStore의 logout 액션 호출
+                useAuthStore.getState().logout();
+                // logout 액션 내부에서 localStorage 제거 및 페이지 이동 처리해야 함
             }
         }
 

@@ -1,38 +1,40 @@
-// src/pages/OAuth2RedirectHandler.tsx
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import useAuthStore from "../store/AuthStore"; // AuthStore 경로 확인
+import useAuthStore from "../store/AuthStore";
 
 const OAuth2RedirectHandler: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const setAccessToken = useAuthStore((state) => state.setAccessToken); // AccessToken만 설정하는 함수 사용
+    // ✅ login 함수와 setKakaoLoginStatus 함수를 함께 가져옴
+    const login = useAuthStore((state) => state.login);
+    const setKakaoLoginStatus = useAuthStore(
+        (state) => state.setKakaoLoginStatus
+    );
 
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
         const accessToken = queryParams.get("accessToken");
-        const error = queryParams.get("error"); // 실패 시 에러 메시지 처리
+        // ✅ 백엔드에서 username을 함께 넘겨주도록 하는 것이 좋습니다.
+        const username = queryParams.get("username");
+        const error = queryParams.get("error");
 
         if (accessToken) {
             console.log("OAuth2 로그인 성공! Access Token:", accessToken);
-            setAccessToken(accessToken); // Zustand 스토어에 Access Token 저장 및 인증 상태 true로 변경
-            localStorage.setItem("accessToken", accessToken); // Axios 인터셉터용 로컬 스토리지에도 저장
+            // ✅ AuthStore의 login 함수를 사용하여 accessToken과 username 모두 저장
+            // 백엔드에서 username이 오지 않는다면 '카카오 사용자' 등으로 기본값 설정
+            login(accessToken, username || "카카오 사용자");
+            // ✅ 카카오 로그인임을 명시적으로 설정
+            setKakaoLoginStatus(true);
 
-            // 백엔드에서 사용자 이름까지 넘겨준다면 이곳에서 login 함수 호출 가능
-            // 예: const username = queryParams.get("username");
-            // login(accessToken, username || '카카오 사용자');
-
-            // Access Token을 받았으므로 메인 페이지 등으로 리다이렉트
             navigate("/");
         } else if (error) {
             console.error("OAuth2 로그인 실패:", error);
-            // 에러 메시지와 함께 로그인 페이지로 리다이렉트
             navigate(`/login?error=${encodeURIComponent(error)}`);
         } else {
             console.warn("OAuth2 리다이렉션에 토큰 또는 에러 정보가 없습니다.");
             navigate("/login?error=unknown_oauth2_error");
         }
-    }, [location, navigate, setAccessToken]); // 의존성 배열에 setAccessToken 추가
+    }, [location, navigate, login, setKakaoLoginStatus]); // ✅ 의존성 배열 업데이트
 
     return (
         <div>
