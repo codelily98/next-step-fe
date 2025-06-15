@@ -40,7 +40,7 @@ const Info = () => {
                             Refresh Token:
                         </strong>{" "}
                         <span className={styles.tokenValue}>
-                            {refreshToken || "없음"}
+                            {refreshToken || "서버에서 Cookie로 발급"}
                         </span>
                     </p>
                     {/* 필요하다면 토큰 디코딩 값도 표시 가능 */}
