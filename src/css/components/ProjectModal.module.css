@@ -114,7 +114,7 @@
     padding: 10px;
     margin-top: 20px;
     margin-bottom: 20px;
-    color: #37352f;
+    color: #fff;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
         "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji",
         "Segoe UI Symbol";
@@ -181,26 +181,4 @@
     width: 50%;
     border-radius: 10px;
     margin-bottom: 16px;
-}
-
-/* 다크 모드 지원 */
-@media (prefers-color-scheme: dark) {
-    .notionContent {
-        color: #e0e0e0;
-    }
-
-    .notionH2,
-    .notionH3 {
-        color: #e0e0e0;
-        border-color: #414141;
-    }
-
-    .notionLink {
-        color: #61aeee;
-        border-bottom-color: #61aeee;
-    }
-
-    .notionLink:hover {
-        background-color: rgba(97, 174, 238, 0.1);
-    }
 }
