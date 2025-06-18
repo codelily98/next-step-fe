@@ -73,7 +73,10 @@ const LoginPage: React.FC = () => {
     };
 
     const handleKakaoLogin = () => {
-        window.location.href = `${API_BASE_URL}/oauth2/authorization/kakao`;
+        const redirectUri = "https://portfolio-nextstep.info/oauth2/redirect"; // 실제 리디렉션 URI
+        window.location.href = `${API_BASE_URL}/oauth2/authorization/kakao?redirect_uri=${encodeURIComponent(
+            redirectUri
+        )}`;
     };
 
     const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
