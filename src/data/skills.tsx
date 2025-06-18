@@ -71,7 +71,7 @@ export const categorizedSkills: SkillCategory[] = [
                 name: "Zustand",
                 description:
                     "React를 위한 가볍고 직관적인 상태 관리 라이브러리입니다.",
-                logo: "https://zustand-demo.pmnd.rs/zustand-logo.svg",
+                logo: "https://storage.googleapis.com/next-step-assets/icon/zustand.webp",
                 link: "https://github.com/pmndrs/zustand",
             },
             {
