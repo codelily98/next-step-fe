@@ -100,7 +100,7 @@ const Info = () => {
         }
 
         try {
-            const res = await api.put("/api/user", formData, {
+            await api.put("/api/user", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     Authorization: `Bearer ${accessToken}`,
