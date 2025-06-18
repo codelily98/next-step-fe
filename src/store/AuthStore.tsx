@@ -121,6 +121,7 @@ import api from "../api"; // Axios 인스턴스 임포트
 interface User {
     username: string;
     nickname?: string;
+    profileImageUrl?: string; // ✅ 추가
 }
 
 interface AuthState {

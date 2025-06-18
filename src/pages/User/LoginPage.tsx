@@ -11,6 +11,7 @@ const LoginPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const login = useAuthStore((state) => state.login);
+    const updateUser = useAuthStore((state) => state.updateUser);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -18,17 +19,14 @@ const LoginPage: React.FC = () => {
         import.meta.env.VITE_APP_API_BASE_URL ||
         "https://api.portfolio-nextstep.info";
 
-    // OAuth2 에러 메시지 처리 (기존 로직 유지)
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
         const oauthError = queryParams.get("error");
 
         if (oauthError) {
             setError(decodeURIComponent(oauthError));
-        } else {
-            if (!error) {
-                setError(null);
-            }
+        } else if (!error) {
+            setError(null);
         }
     }, [location.search]);
 
@@ -44,7 +42,18 @@ const LoginPage: React.FC = () => {
             });
             const { accessToken } = response.data;
 
-            login(accessToken, username);
+            // 1단계: accessToken 저장
+            login(accessToken, { username });
+
+            // 2단계: 사용자 정보 받아오기
+            const userRes = await api.get("/api/user/me", {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+
+            const { nickname, profileImageUrl } = userRes.data;
+            updateUser({ username, nickname, profileImageUrl });
 
             setTimeout(() => {
                 setIsLoading(false);
@@ -52,13 +61,9 @@ const LoginPage: React.FC = () => {
             }, 1000);
         } catch (err: any) {
             console.error("로그인 실패:", err);
-            if (err.response && err.response.status === 401) {
+            if (err.response?.status === 401) {
                 setError("아이디 또는 비밀번호가 일치하지 않습니다.");
-            } else if (
-                err.response &&
-                err.response.data &&
-                err.response.data.message
-            ) {
+            } else if (err.response?.data?.message) {
                 setError(err.response.data.message);
             } else {
                 setError("로그인 중 오류가 발생했습니다.");
@@ -71,11 +76,8 @@ const LoginPage: React.FC = () => {
         window.location.href = `${API_BASE_URL}/oauth2/authorization/kakao`;
     };
 
-    // ✅ Link (a 태그) 클릭 이벤트 핸들러 추가
     const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-        if (isLoading) {
-            e.preventDefault(); // 로딩 중이면 링크 클릭 막기
-        }
+        if (isLoading) e.preventDefault();
     };
 
     return (
@@ -140,7 +142,6 @@ const LoginPage: React.FC = () => {
 
                 <div className={styles.linkBox}>
                     <p className={styles.linkText}>계정이 없으신가요? </p>
-                    {/* ✅ Link 컴포넌트에 onClick과 className 추가 */}
                     <Link
                         to="/register"
                         className={`${styles.link} ${
