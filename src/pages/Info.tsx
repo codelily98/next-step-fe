@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../api";
 
 const Info = () => {
-    const { isAuthenticated, user, accessToken, setAccessToken } =
+    const { isAuthenticated, user, accessToken, setAccessToken, updateUser } =
         useAuthStore();
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const username = user?.username;
@@ -122,19 +122,18 @@ const Info = () => {
                 profileImageUrl,
             } = res.data;
 
-            // ✅ 상태 반영
-            setSuccess("정보가 성공적으로 수정되었습니다.");
-            setError(null);
-            setProfileImage(null);
-            setPreview(null);
-
-            // ✅ 토큰 및 사용자 정보 업데이트
+            // ✅ 상태 업데이트
             setAccessToken(newToken);
-            useAuthStore.getState().updateUser({
+            updateUser({
                 username: username ?? "",
                 nickname: newNickname,
                 profileImageUrl,
             });
+
+            setSuccess("정보가 성공적으로 수정되었습니다.");
+            setError(null);
+            setProfileImage(null);
+            setPreview(null);
         } catch (err) {
             console.error(err);
             alert("수정 중 오류가 발생했습니다.");
