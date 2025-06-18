@@ -64,7 +64,7 @@ const Info = () => {
     const { isAuthenticated, user, accessToken } = useAuthStore();
     const username = user?.username;
 
-    const [nickname, setNickname] = useState(user?.nickname || "");
+    const [nickname, setNickname] = useState("");
     const [profileImage, setProfileImage] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
 
@@ -74,25 +74,30 @@ const Info = () => {
 
     const navigate = useNavigate();
 
+    const clearProfileImage = () => {
+        setProfileImage(null);
+        setPreview(null);
+    };
+
+    const fetchUserInfo = async () => {
+        try {
+            const res = await api.get("/api/user/me", {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+            setNickname(res.data.nickname || "");
+        } catch (err) {
+            console.error("사용자 정보 불러오기 실패", err);
+        }
+    };
+
     useEffect(() => {
         if (!isAuthenticated) {
             alert("로그인이 필요한 서비스입니다.");
             navigate("/login");
             return;
         }
-
-        const fetchUserInfo = async () => {
-            try {
-                const res = await api.get("/api/user/me", {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                });
-                setNickname(res.data.nickname || "");
-            } catch (err) {
-                console.error("사용자 정보 불러오기 실패", err);
-            }
-        };
 
         fetchUserInfo();
         window.scrollTo(0, 0);
@@ -151,21 +156,22 @@ const Info = () => {
         if (!isValid) return;
 
         const formData = new FormData();
-        formData.append("nickname", nickname);
-        if (profileImage) {
-            formData.append("profileImage", profileImage);
-        }
+        formData.append("nickname", nickname.trim());
+        if (profileImage) formData.append("profileImage", profileImage);
 
         try {
             await api.put("/api/user", formData, {
                 headers: {
-                    "Content-Type": "multipart/form-data",
                     Authorization: `Bearer ${accessToken}`,
+                    "Content-Type": "multipart/form-data",
                 },
             });
 
-            alert("정보가 성공적으로 수정되었습니다.");
-            setSuccess(null);
+            setSuccess("정보가 성공적으로 수정되었습니다.");
+            setError(null);
+            setProfileImage(null); // 이미지 초기화
+            setPreview(null); // 미리보기 초기화
+            await fetchUserInfo(); // 최신 정보 반영
         } catch (err) {
             console.error(err);
             alert("수정 중 오류가 발생했습니다.");
@@ -190,11 +196,20 @@ const Info = () => {
                 />
 
                 {preview && (
-                    <img
-                        src={preview}
-                        alt="미리보기"
-                        className={styles.preview}
-                    />
+                    <div className={styles.previewContainer}>
+                        <img
+                            src={preview}
+                            alt="미리보기"
+                            className={styles.preview}
+                        />
+                        <button
+                            type="button"
+                            onClick={clearProfileImage}
+                            className={styles.deleteButton}
+                        >
+                            이미지 삭제
+                        </button>
+                    </div>
                 )}
 
                 <label className={styles.label}>닉네임 변경</label>
@@ -205,10 +220,9 @@ const Info = () => {
                     onBlur={validateNickname}
                     className={styles.input}
                 />
+
                 {checking && (
-                    <p className={styles.checking}>
-                        닉네임 중복 확인 요청중...
-                    </p>
+                    <p className={styles.checking}>닉네임 중복 확인 중...</p>
                 )}
                 {error && <p className={styles.error}>{error}</p>}
                 {success && !error && (
