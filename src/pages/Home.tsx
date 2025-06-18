@@ -34,6 +34,16 @@ const Home = () => {
             <h1 className={styles.h1}>
                 {isAuthenticated && username ? (
                     <>
+                        {/* ✅ 프로필 이미지 표시 */}
+                        {user?.profileImageUrl && (
+                            <div className={styles.profileWrap}>
+                                <img
+                                    src={user.profileImageUrl}
+                                    alt="프로필 이미지"
+                                    className={styles.profileImage}
+                                />
+                            </div>
+                        )}
                         <span className={styles.strong}>{username}</span>님,
                         환영합니다!
                     </>

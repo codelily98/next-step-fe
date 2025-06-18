@@ -186,6 +186,16 @@ const Info = () => {
         <div className={styles.container}>
             <h1 className={styles.h1}>
                 <span className={styles.strong}>{username}</span>님
+                {/* ✅ 프로필 이미지가 있는 경우에만 아래에 표시 */}
+                {user?.profileImageUrl && (
+                    <div className={styles.profileWrap}>
+                        <img
+                            src={user.profileImageUrl}
+                            alt="프로필 이미지"
+                            className={styles.profileImage}
+                        />
+                    </div>
+                )}
             </h1>
 
             <form className={styles.form} onSubmit={handleSubmit}>

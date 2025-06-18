@@ -79,6 +79,22 @@
     text-align: center;
 }
 
+.profileWrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.profileImage {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 12px;
+    border: 2px solid #4ecdc4;
+}
+
 .p {
     font-size: 18px;
     margin-bottom: 20px;
@@ -158,9 +174,7 @@
     }
 
     .logo {
-        padding: 1rem;
-        width: 144px;
-        height: 144px;
+        display: none;
     }
 
     .title {
