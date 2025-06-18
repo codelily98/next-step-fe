@@ -58,7 +58,7 @@ import { useEffect, useState } from "react";
 import styles from "../css/pages/Info.module.css";
 import useAuthStore from "../store/AuthStore";
 import { useNavigate } from "react-router-dom";
-import api from "../api"; // axios 인스턴스
+import api from "../api";
 
 const Info = () => {
     const { isAuthenticated, user, accessToken } = useAuthStore();
@@ -67,6 +67,10 @@ const Info = () => {
     const [nickname, setNickname] = useState(username || "");
     const [profileImage, setProfileImage] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
+
+    const [success, setSuccess] = useState<string | null>(null); // ✅ 성공 메시지 상태
+    const [error, setError] = useState<string | null>(null); // 🔸 유효성/중복 에러
+    const [checking, setChecking] = useState(false); // 🔸 중복 확인 중 상태
 
     const navigate = useNavigate();
 
@@ -77,9 +81,8 @@ const Info = () => {
         }
 
         window.scrollTo(0, 0);
-    }, [isAuthenticated, navigate]);
+    }, []);
 
-    // 프로필 이미지 미리보기 처리
     useEffect(() => {
         if (profileImage) {
             const reader = new FileReader();
@@ -90,8 +93,48 @@ const Info = () => {
         }
     }, [profileImage]);
 
+    // ✅ 닉네임 유효성 + 중복 검사
+    const validateNickname = async (): Promise<boolean> => {
+        const trimmed = nickname.trim();
+
+        // 유효성 검사
+        if (trimmed.length < 2 || trimmed.length > 15) {
+            setError("닉네임은 2자 이상 15자 이하여야 합니다.");
+            setSuccess(null);
+            return false;
+        }
+
+        // 기존 닉네임과 같으면 중복 검사 생략
+        if (trimmed === username) {
+            setError(null);
+            setSuccess(null);
+            return true;
+        }
+
+        try {
+            setChecking(true);
+            await api.post("/api/user/check-nickname", { nickname: trimmed });
+            setError(null);
+            setSuccess("사용 가능한 닉네임입니다."); // ✅ 성공 메시지
+            return true;
+        } catch (err: any) {
+            setSuccess(null);
+            if (err.response?.status === 409) {
+                setError("이미 사용 중인 닉네임입니다.");
+            } else {
+                setError("닉네임 확인 중 오류가 발생했습니다.");
+            }
+            return false;
+        } finally {
+            setChecking(false);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        const isValid = await validateNickname();
+        if (!isValid) return;
 
         const formData = new FormData();
         formData.append("nickname", nickname);
@@ -108,7 +151,7 @@ const Info = () => {
             });
 
             alert("정보가 성공적으로 수정되었습니다.");
-            // 상태 초기화 또는 새로고침
+            // 새 닉네임을 상태에 반영하려면 store.updateUser() 호출 가능
         } catch (err) {
             console.error(err);
             alert("수정 중 오류가 발생했습니다.");
@@ -122,27 +165,15 @@ const Info = () => {
             </h1>
 
             <form className={styles.form} onSubmit={handleSubmit}>
-                <label>
-                    닉네임 변경:
-                    <input
-                        type="text"
-                        value={nickname}
-                        onChange={(e) => setNickname(e.target.value)}
-                        className={styles.input}
-                    />
-                </label>
-
-                <label>
-                    프로필 사진 변경:
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) =>
-                            setProfileImage(e.target.files?.[0] || null)
-                        }
-                        className={styles.input}
-                    />
-                </label>
+                <label className={styles.label}>프로필 사진 변경</label>
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) =>
+                        setProfileImage(e.target.files?.[0] || null)
+                    }
+                    className={styles.input}
+                />
 
                 {preview && (
                     <img
@@ -150,6 +181,24 @@ const Info = () => {
                         alt="미리보기"
                         className={styles.preview}
                     />
+                )}
+
+                <label className={styles.label}>닉네임 변경</label>
+                <input
+                    type="text"
+                    value={nickname}
+                    onChange={(e) => setNickname(e.target.value)}
+                    onBlur={validateNickname}
+                    className={styles.input}
+                />
+                {checking && (
+                    <p className={styles.checking}>
+                        닉네임 중복 확인 요청중...
+                    </p>
+                )}
+                {error && <p className={styles.error}>{error}</p>}
+                {success && !error && (
+                    <p className={styles.success}>{success}</p>
                 )}
 
                 <button type="submit" className={styles.button}>

@@ -18,11 +18,19 @@
     flex-direction: column;
     gap: 20px;
     width: 100%;
-    max-width: 480px;
-    background-color: #1e1e1e;
-    padding: 24px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    padding: 15px;
+    background-color: #2a2a2a;
+    border-radius: 8px;
+    font-size: 0.9em;
+}
+
+.label {
+    display: flex;
+    margin-left: 10px;
+}
+
+.label:first-of-type {
+    margin-top: 10px;
 }
 
 .input {
@@ -30,7 +38,7 @@
     padding: 10px 12px;
     font-size: 16px;
     border: 1px solid #4ecdc4;
-    border-radius: 6px;
+    border-radius: 30px;
     background-color: #2c2c2c;
     color: white;
 }
@@ -40,8 +48,12 @@
     color: black;
     border: none;
     padding: 8px 12px;
-    border-radius: 4px;
+    border-radius: 30px;
     cursor: pointer;
+}
+
+.input::file-selector-button:hover {
+    background-color: #38b2ac;
 }
 
 .preview {
@@ -60,7 +72,7 @@
     color: black;
     font-weight: bold;
     border: none;
-    border-radius: 6px;
+    border-radius: 30px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
@@ -87,6 +99,27 @@
 .strong {
     color: #4ecdc4;
     font-weight: 600;
+}
+
+.success {
+    color: #4ecdc4;
+    font-size: 0.9rem;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+
+.error {
+    color: #ff6b6b;
+    font-size: 0.9rem;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+
+.checking {
+    color: #f3f3a1;
+    font-size: 0.9rem;
+    margin-top: -10px;
+    margin-bottom: 10px;
 }
 
 .tokenInfo {
