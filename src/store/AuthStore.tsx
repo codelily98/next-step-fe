@@ -5,7 +5,7 @@ import api from "../api"; // Axios 인스턴스 임포트
 interface User {
     username: string;
     nickname?: string;
-    profileImageUrl?: string; // ✅ 추가
+    profileImageUrl?: string;
 }
 
 interface AuthState {
@@ -13,7 +13,13 @@ interface AuthState {
     isAuthenticated: boolean;
     user: User | null;
     isKakaoLogin: boolean;
-    login: (accessToken: string, user: User, isKakaoLogin?: boolean) => void;
+    login: (
+        accessToken: string,
+        username: string,
+        nickname?: string,
+        profileImageUrl?: string,
+        isKakaoLogin?: boolean
+    ) => void;
     logout: () => Promise<void>;
     setAccessToken: (token: string) => void;
     setKakaoLoginStatus: (status: boolean) => void;
@@ -29,13 +35,26 @@ const useAuthStore = create<AuthState>()(
             user: null,
             isKakaoLogin: false,
 
-            login: (accessToken, user, isKakaoLogin = false) => {
+            login: (
+                accessToken,
+                username,
+                nickname = "",
+                profileImageUrl = "",
+                isKakaoLogin = false
+            ) => {
+                const user: User = {
+                    username,
+                    nickname,
+                    profileImageUrl,
+                };
+
                 set({
                     accessToken,
                     isAuthenticated: true,
                     user,
                     isKakaoLogin,
                 });
+
                 console.log("로그인 성공. 사용자:", user);
             },
 
