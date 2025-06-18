@@ -1,3 +1,4 @@
+// ✅ Info.tsx (FE 전체 코드 수정)
 import { useRef, useEffect, useState } from "react";
 import styles from "../css/pages/Info.module.css";
 import useAuthStore from "../store/AuthStore";
@@ -5,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../api";
 
 const Info = () => {
-    const { isAuthenticated, user, accessToken, setAccessToken, updateUser } =
+    const { isAuthenticated, user, accessToken, setAccessToken, login } =
         useAuthStore();
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const username = user?.username;
@@ -13,7 +14,6 @@ const Info = () => {
     const [nickname, setNickname] = useState("");
     const [profileImage, setProfileImage] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
-
     const [success, setSuccess] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [checking, setChecking] = useState(false);
@@ -23,19 +23,17 @@ const Info = () => {
     const clearProfileImage = () => {
         setProfileImage(null);
         setPreview(null);
-        if (fileInputRef.current) {
-            fileInputRef.current.value = "";
-        }
+        if (fileInputRef.current) fileInputRef.current.value = "";
     };
 
-    const fetchUserInfo = async () => {
+    const fetchUserInfo = async (token: string) => {
         try {
             const res = await api.get("/api/user/me", {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
+                headers: { Authorization: `Bearer ${token}` },
             });
-            setNickname(res.data.nickname || "");
+            const { username, nickname, profileImageUrl } = res.data;
+            login(token, { username, nickname, profileImageUrl });
+            setNickname(nickname || "");
         } catch (err) {
             console.error("사용자 정보 불러오기 실패", err);
         }
@@ -47,8 +45,7 @@ const Info = () => {
             navigate("/login");
             return;
         }
-
-        fetchUserInfo();
+        fetchUserInfo(accessToken || "");
         window.scrollTo(0, 0);
     }, [isAuthenticated, accessToken, navigate]);
 
@@ -64,7 +61,6 @@ const Info = () => {
 
     const validateNickname = async (): Promise<boolean> => {
         const trimmed = nickname.trim();
-
         if (trimmed.length < 2 || trimmed.length > 15) {
             setError("닉네임은 2자 이상 15자 이하여야 합니다.");
             setSuccess(null);
@@ -76,11 +72,7 @@ const Info = () => {
             const res = await api.post(
                 "/api/user/check-nickname",
                 { nickname: trimmed },
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                }
+                { headers: { Authorization: `Bearer ${accessToken}` } }
             );
             setSuccess(res.data);
             setError(null);
@@ -100,7 +92,6 @@ const Info = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
         const isValid = await validateNickname();
         if (!isValid) return;
 
@@ -116,24 +107,12 @@ const Info = () => {
                 },
             });
 
-            const {
-                accessToken: newToken,
-                nickname: newNickname,
-                profileImageUrl,
-            } = res.data;
-
-            // ✅ 상태 업데이트
+            const { accessToken: newToken } = res.data;
             setAccessToken(newToken);
-            updateUser({
-                username: username ?? "",
-                nickname: newNickname,
-                profileImageUrl,
-            });
-
+            await fetchUserInfo(newToken);
             setSuccess("정보가 성공적으로 수정되었습니다.");
             setError(null);
-            setProfileImage(null);
-            setPreview(null);
+            clearProfileImage();
         } catch (err) {
             console.error(err);
             alert("수정 중 오류가 발생했습니다.");
@@ -205,28 +184,6 @@ const Info = () => {
                     저장
                 </button>
             </form>
-
-            {isAuthenticated && (
-                <div className={styles.tokenInfo}>
-                    <p className={styles.tokenTitle}>
-                        성공적으로 Token이 발급되었습니다.
-                    </p>
-                    <p className={styles.p}>
-                        <strong className={styles.strong}>Access Token:</strong>{" "}
-                        <span className={styles.tokenValue}>
-                            {accessToken || "없음"}
-                        </span>
-                    </p>
-                    <p className={styles.p}>
-                        <strong className={styles.strong}>
-                            Refresh Token:
-                        </strong>{" "}
-                        <span className={styles.tokenValue}>
-                            {"서버에서 Cookie로 발급"}
-                        </span>
-                    </p>
-                </div>
-            )}
         </div>
     );
 };

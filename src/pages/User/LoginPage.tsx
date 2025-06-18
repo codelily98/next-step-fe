@@ -52,8 +52,12 @@ const LoginPage: React.FC = () => {
 
             const { nickname, profileImageUrl } = userRes.data;
 
-            // 3. Zustand 상태 업데이트
-            login(accessToken, username, nickname, profileImageUrl);
+            // 3. Zustand 로그인 상태 업데이트
+            login(accessToken, {
+                username,
+                nickname,
+                profileImageUrl,
+            });
 
             setTimeout(() => {
                 setIsLoading(false);

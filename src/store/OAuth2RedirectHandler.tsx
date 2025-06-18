@@ -16,7 +16,7 @@ const OAuth2RedirectHandler: React.FC = () => {
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
         const accessToken = queryParams.get("accessToken");
-        const username = queryParams.get("username");
+        const usernameFromQuery = queryParams.get("username");
         const error = queryParams.get("error");
 
         if (accessToken) {
@@ -34,9 +34,7 @@ const OAuth2RedirectHandler: React.FC = () => {
 
                     login(
                         accessToken,
-                        username,
-                        nickname,
-                        profileImageUrl,
+                        { username, nickname, profileImageUrl },
                         true
                     );
                     setKakaoLoginStatus(true);
@@ -46,12 +44,10 @@ const OAuth2RedirectHandler: React.FC = () => {
                         "⚠️ 사용자 정보 조회 실패. fallback으로 username 사용"
                     );
 
-                    if (username) {
+                    if (usernameFromQuery) {
                         login(
                             accessToken,
-                            username,
-                            undefined,
-                            undefined,
+                            { username: usernameFromQuery },
                             true
                         );
                         setKakaoLoginStatus(true);

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import api from "../api"; // Axios 인스턴스 임포트
+import api from "../api";
 
 interface User {
     username: string;
@@ -13,17 +13,11 @@ interface AuthState {
     isAuthenticated: boolean;
     user: User | null;
     isKakaoLogin: boolean;
-    login: (
-        accessToken: string,
-        username: string,
-        nickname?: string,
-        profileImageUrl?: string,
-        isKakaoLogin?: boolean
-    ) => void;
+    login: (accessToken: string, user: User, isKakaoLogin?: boolean) => void;
     logout: () => Promise<void>;
     setAccessToken: (token: string) => void;
     setKakaoLoginStatus: (status: boolean) => void;
-    updateUser: (newUser: User) => void;
+    updateUser: (newUser: Partial<User>, newToken?: string) => void;
     refreshAccessToken: () => Promise<string | null>;
 }
 
@@ -35,27 +29,15 @@ const useAuthStore = create<AuthState>()(
             user: null,
             isKakaoLogin: false,
 
-            login: (
-                accessToken,
-                username,
-                nickname = "",
-                profileImageUrl = "",
-                isKakaoLogin = false
-            ) => {
-                const user: User = {
-                    username,
-                    nickname,
-                    profileImageUrl,
-                };
-
+            // ✅ 로그인 시 전체 유저 객체를 넘김
+            login: (accessToken, user, isKakaoLogin = false) => {
                 set({
                     accessToken,
                     isAuthenticated: true,
                     user,
                     isKakaoLogin,
                 });
-
-                console.log("로그인 성공. 사용자:", user);
+                console.log("✅ 로그인 성공:", user);
             },
 
             setAccessToken: (token: string) => {
@@ -70,14 +52,25 @@ const useAuthStore = create<AuthState>()(
                 set({ isKakaoLogin: status });
             },
 
-            updateUser: (newUser) => {
-                set({ user: newUser });
-                console.log("사용자 정보 업데이트:", newUser);
+            // ✅ 업데이트된 필드만 병합하며, 토큰도 갱신 가능
+            updateUser: (newUser, newToken) => {
+                const current = get().user || { username: "" };
+                const merged = { ...current, ...newUser };
+
+                set({
+                    user: merged,
+                    ...(newToken && {
+                        accessToken: newToken,
+                        isAuthenticated: true,
+                    }),
+                });
+
+                console.log("🔄 사용자 정보 업데이트:", merged);
             },
 
             refreshAccessToken: async () => {
                 console.warn(
-                    "❗ 수동 호출은 필요하지 않습니다. 서버 필터에서 자동 재발급됩니다."
+                    "❗ 자동 재발급 구조에서는 수동 호출이 필요 없습니다."
                 );
                 return null;
             },
@@ -110,7 +103,6 @@ const useAuthStore = create<AuthState>()(
                         user: null,
                         isKakaoLogin: false,
                     });
-                    console.log("클라이언트 세션 초기화 완료");
                     window.location.href = "/login";
                 }
             },
