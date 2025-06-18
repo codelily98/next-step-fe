@@ -64,17 +64,16 @@ const Info = () => {
     const { isAuthenticated, user, accessToken } = useAuthStore();
     const username = user?.username;
 
-    const [nickname, setNickname] = useState(username || "");
+    const [nickname, setNickname] = useState(user?.nickname || "");
     const [profileImage, setProfileImage] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
 
-    const [success, setSuccess] = useState<string | null>(null); // ✅ 성공 메시지 상태
-    const [error, setError] = useState<string | null>(null); // 🔸 유효성/중복 에러
-    const [checking, setChecking] = useState(false); // 🔸 중복 확인 중 상태
+    const [success, setSuccess] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [checking, setChecking] = useState(false);
 
     const navigate = useNavigate();
 
-    // 🔹 사용자 정보 불러오기
     useEffect(() => {
         if (!isAuthenticated) {
             alert("로그인이 필요한 서비스입니다.");
@@ -89,7 +88,7 @@ const Info = () => {
                         Authorization: `Bearer ${accessToken}`,
                     },
                 });
-                setNickname(res.data.nickname || ""); // nickname 설정
+                setNickname(res.data.nickname || "");
             } catch (err) {
                 console.error("사용자 정보 불러오기 실패", err);
             }
@@ -109,7 +108,6 @@ const Info = () => {
         }
     }, [profileImage]);
 
-    // ✅ 닉네임 유효성 + 중복 검사
     const validateNickname = async (): Promise<boolean> => {
         const trimmed = nickname.trim();
 
@@ -130,8 +128,8 @@ const Info = () => {
                     },
                 }
             );
+            setSuccess(res.data);
             setError(null);
-            setSuccess("사용 가능한 닉네임입니다.");
             return true;
         } catch (err: any) {
             setSuccess(null);
@@ -167,7 +165,7 @@ const Info = () => {
             });
 
             alert("정보가 성공적으로 수정되었습니다.");
-            setSuccess(null); // 저장 후 메시지 초기화
+            setSuccess(null);
         } catch (err) {
             console.error(err);
             alert("수정 중 오류가 발생했습니다.");
