@@ -65,14 +65,12 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuthStore from "../store/AuthStore";
-import api from "../api"; // API 인스턴스 추가
 import styles from "../css/store/OAuth2RedirectHandler.module.css";
 
 const OAuth2RedirectHandler: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const login = useAuthStore((state) => state.login);
-    const updateUser = useAuthStore((state) => state.updateUser);
     const setKakaoLoginStatus = useAuthStore(
         (state) => state.setKakaoLoginStatus
     );
@@ -83,54 +81,35 @@ const OAuth2RedirectHandler: React.FC = () => {
         const queryParams = new URLSearchParams(location.search);
         const accessToken = queryParams.get("accessToken");
         const username = queryParams.get("username");
+        const nickname = queryParams.get("nickname");
+        const profileImageUrl = queryParams.get("profileImageUrl");
         const error = queryParams.get("error");
 
-        const handleOAuthLogin = async () => {
-            try {
-                if (accessToken && username) {
-                    console.log(
-                        "OAuth2 로그인 성공! Access Token:",
-                        accessToken
-                    );
+        if (accessToken && username) {
+            console.log("OAuth2 로그인 성공! Access Token:", accessToken);
 
-                    // 1단계: accessToken과 username 저장
-                    login(accessToken, { username });
-                    setKakaoLoginStatus(true);
-
-                    // 2단계: 사용자 정보 가져오기
-                    const res = await api.get("/api/user/me", {
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`,
-                        },
-                    });
-
-                    const { nickname, profileImageUrl } = res.data;
-                    updateUser({ username, nickname, profileImageUrl });
-
-                    setTimeout(() => {
-                        setIsLoading(false);
-                        navigate("/");
-                    }, 1000);
-                } else if (error) {
-                    console.error("OAuth2 로그인 실패:", error);
-                    setIsLoading(false);
-                    navigate(`/login?error=${encodeURIComponent(error)}`);
-                } else {
-                    console.warn(
-                        "OAuth2 리다이렉션에 토큰 또는 에러 정보가 없습니다."
-                    );
-                    setIsLoading(false);
-                    navigate("/login?error=unknown_oauth2_error");
-                }
-            } catch (err) {
-                console.error("OAuth2 로그인 처리 중 오류:", err);
+            const timer = setTimeout(() => {
+                login(accessToken, {
+                    username,
+                    nickname: nickname || undefined,
+                    profileImageUrl: profileImageUrl || undefined,
+                });
+                setKakaoLoginStatus(true);
                 setIsLoading(false);
-                navigate("/login?error=oauth2_internal_error");
-            }
-        };
+                navigate("/");
+            }, 1000);
 
-        handleOAuthLogin();
-    }, [location, navigate, login, updateUser, setKakaoLoginStatus]);
+            return () => clearTimeout(timer);
+        } else if (error) {
+            console.error("OAuth2 로그인 실패:", error);
+            setIsLoading(false);
+            navigate(`/login?error=${encodeURIComponent(error)}`);
+        } else {
+            console.warn("OAuth2 리다이렉션에 토큰 또는 에러 정보가 없습니다.");
+            setIsLoading(false);
+            navigate("/login?error=unknown_oauth2_error");
+        }
+    }, [location, navigate, login, setKakaoLoginStatus]);
 
     return (
         <>
