@@ -130,7 +130,11 @@ const Info = () => {
 
             // ✅ 토큰 및 사용자 정보 업데이트
             setAccessToken(newToken);
-            login(newToken, username ?? "", newNickname, profileImageUrl);
+            useAuthStore.getState().updateUser({
+                username: username ?? "",
+                nickname: newNickname,
+                profileImageUrl,
+            });
         } catch (err) {
             console.error(err);
             alert("수정 중 오류가 발생했습니다.");
