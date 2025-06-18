@@ -80,26 +80,39 @@ const OAuth2RedirectHandler: React.FC = () => {
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
         const accessToken = queryParams.get("accessToken");
-        const username = queryParams.get("username");
-        const nickname = queryParams.get("nickname");
-        const profileImageUrl = queryParams.get("profileImageUrl");
         const error = queryParams.get("error");
 
-        if (accessToken && username) {
+        if (accessToken) {
             console.log("OAuth2 로그인 성공! Access Token:", accessToken);
 
-            const timer = setTimeout(() => {
-                login(accessToken, {
-                    username,
-                    nickname: nickname || undefined,
-                    profileImageUrl: profileImageUrl || undefined,
-                });
-                setKakaoLoginStatus(true);
-                setIsLoading(false);
-                navigate("/");
-            }, 1000);
+            const fetchUserInfo = async () => {
+                try {
+                    const res = await fetch("/api/user/me", {
+                        method: "GET",
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                    });
 
-            return () => clearTimeout(timer);
+                    if (!res.ok) throw new Error("Failed to fetch user info");
+                    const data = await res.json();
+
+                    login(accessToken, {
+                        username: data.username,
+                        nickname: data.nickname,
+                        profileImageUrl: data.profileImageUrl,
+                    });
+                    setKakaoLoginStatus(true);
+                    navigate("/");
+                } catch (err) {
+                    console.error("유저 정보 요청 실패", err);
+                    navigate("/login?error=user_info_fetch_failed");
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            fetchUserInfo();
         } else if (error) {
             console.error("OAuth2 로그인 실패:", error);
             setIsLoading(false);
