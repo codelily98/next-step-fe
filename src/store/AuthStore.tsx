@@ -118,16 +118,21 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import api from "../api"; // Axios 인스턴스 임포트
 
+interface User {
+    username: string;
+    nickname?: string;
+}
+
 interface AuthState {
     accessToken: string | null;
     isAuthenticated: boolean;
-    user: { username: string } | null;
+    user: User | null;
     isKakaoLogin: boolean;
-    login: (accessToken: string, username: string) => void;
+    login: (accessToken: string, user: User) => void;
     logout: () => Promise<void>;
     setAccessToken: (token: string) => void;
     setKakaoLoginStatus: (status: boolean) => void;
-    updateUser: (newUser: { username: string }) => void;
+    updateUser: (newUser: User) => void;
     refreshAccessToken: () => Promise<string | null>;
 }
 
@@ -139,14 +144,17 @@ const useAuthStore = create<AuthState>()(
             user: null,
             isKakaoLogin: false,
 
-            login: (accessToken, username) => {
+            login: (accessToken, user) => {
                 set({
                     accessToken,
                     isAuthenticated: true,
-                    user: { username },
+                    user,
                     isKakaoLogin: false,
                 });
-                console.log("로그인 성공. 사용자:", username);
+                console.log(
+                    "\uB85C\uADF8\uC778 \uC131\uACF5. \uC0AC\uC6A9\uC790:",
+                    user
+                );
             },
 
             setAccessToken: (token: string) => {
@@ -157,28 +165,32 @@ const useAuthStore = create<AuthState>()(
                 set({ isKakaoLogin: status });
             },
 
-            // ✅ 사용자 정보 업데이트 함수
             updateUser: (newUser) => {
                 set({ user: newUser });
-                console.log("사용자 정보 업데이트:", newUser);
+                console.log(
+                    "\uC0AC\uC6A9\uC790 \uC815\uBCF4 \uC5C5\uB370\uC774\uD2B8:",
+                    newUser
+                );
             },
 
-            // ✅ accessToken 재발급 함수 (refreshToken은 쿠키로 전송)
             refreshAccessToken: async () => {
                 try {
                     const res = await api.post(
                         "/api/auth/refresh-token",
                         null,
                         {
-                            withCredentials: true, // 쿠키 전송
+                            withCredentials: true,
                         }
                     );
                     const newAccessToken = res.data.accessToken;
                     set({ accessToken: newAccessToken, isAuthenticated: true });
-                    console.log("Access Token 갱신 성공");
+                    console.log("Access Token \uAC31\uC2E0 \uC131\uACF5");
                     return newAccessToken;
                 } catch (error) {
-                    console.error("Access Token 갱신 실패:", error);
+                    console.error(
+                        "Access Token \uAC31\uC2E0 \uC2E4\uD328:",
+                        error
+                    );
                     set({
                         accessToken: null,
                         isAuthenticated: false,
@@ -201,9 +213,9 @@ const useAuthStore = create<AuthState>()(
                                 },
                             });
                             console.log(
-                                `카카오 사용자 ${
+                                `\uCE74\uCE74\uC624 \uC0AC\uC6A9\uC790 ${
                                     user?.username || "Unknown"
-                                } 로그아웃 성공 (백엔드)`
+                                } \uB85C\uADF8\uC544\uC6C3 \uC131\uACF5`
                             );
                         } else {
                             await api.post("/api/auth/logout", null, {
@@ -212,28 +224,34 @@ const useAuthStore = create<AuthState>()(
                                 },
                             });
                             console.log(
-                                `일반 사용자 ${
+                                `\uC77C\uBC18 \uC0AC\uC6A9\uC790 ${
                                     user?.username || "Unknown"
-                                } 로그아웃 성공 (백엔드)`
+                                } \uB85C\uADF8\uC544\uC6C3 \uC131\uACF5`
                             );
                         }
                     } else {
-                        console.warn("로그아웃 시도: Access Token이 없습니다.");
+                        console.warn(
+                            "\uB85C\uADF8\uC544\uC6C3 \uC2DC\uB3C4: Access Token\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."
+                        );
                     }
                 } catch (error) {
-                    console.error("백엔드 로그아웃 실패:", error);
+                    console.error(
+                        "\uBC31\uC5C5\uC5D0 \uB300\uD55C \uB85C\uADF8\uC544\uC6C3 \uC2E4\uD328:",
+                        error
+                    );
                     alert(
-                        "로그아웃 처리 중 오류가 발생했지만, 클라이언트 세션이 종료됩니다."
+                        "\uB85C\uADF8\uC544\uC6C3 \uCC98\uB9AC \uC911 \uC624\uB958\uAC00 \uBC1C\uC0DD\uD588\uC9C0\uB9CC, \uD074\uB77C\uC774\uC5B8\uD2B8 \uC138\uC158\uC774 \uC885\uB8CC\uB429\uB2C8\uB2E4."
                     );
                 } finally {
-                    // 클라이언트 상태 초기화
                     set({
                         accessToken: null,
                         isAuthenticated: false,
                         user: null,
                         isKakaoLogin: false,
                     });
-                    console.log("클라이언트 로그아웃 상태 초기화.");
+                    console.log(
+                        "\uD074\uB77C\uC774\uC5B8\uD2B8 \uB85C\uADF8\uC544\uC6C3 \uC0C1\uD0DC \uCD08\uAE30\uD654."
+                    );
                     window.location.href = "/login";
                 }
             },

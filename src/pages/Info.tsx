@@ -74,14 +74,30 @@ const Info = () => {
 
     const navigate = useNavigate();
 
+    // 🔹 사용자 정보 불러오기
     useEffect(() => {
         if (!isAuthenticated) {
             alert("로그인이 필요한 서비스입니다.");
             navigate("/login");
+            return;
         }
 
+        const fetchUserInfo = async () => {
+            try {
+                const res = await api.get("/api/user/me", {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                });
+                setNickname(res.data.nickname || ""); // nickname 설정
+            } catch (err) {
+                console.error("사용자 정보 불러오기 실패", err);
+            }
+        };
+
+        fetchUserInfo();
         window.scrollTo(0, 0);
-    }, []);
+    }, [isAuthenticated, accessToken, navigate]);
 
     useEffect(() => {
         if (profileImage) {
@@ -97,25 +113,25 @@ const Info = () => {
     const validateNickname = async (): Promise<boolean> => {
         const trimmed = nickname.trim();
 
-        // 유효성 검사
         if (trimmed.length < 2 || trimmed.length > 15) {
             setError("닉네임은 2자 이상 15자 이하여야 합니다.");
             setSuccess(null);
             return false;
         }
 
-        // 기존 닉네임과 같으면 중복 검사 생략
-        if (trimmed === username) {
-            setError(null);
-            setSuccess(null);
-            return true;
-        }
-
         try {
             setChecking(true);
-            await api.post("/api/user/check-nickname", { nickname: trimmed });
+            const res = await api.post(
+                "/api/user/check-nickname",
+                { nickname: trimmed },
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                }
+            );
             setError(null);
-            setSuccess("사용 가능한 닉네임입니다."); // ✅ 성공 메시지
+            setSuccess("사용 가능한 닉네임입니다.");
             return true;
         } catch (err: any) {
             setSuccess(null);
@@ -151,7 +167,7 @@ const Info = () => {
             });
 
             alert("정보가 성공적으로 수정되었습니다.");
-            // 새 닉네임을 상태에 반영하려면 store.updateUser() 호출 가능
+            setSuccess(null); // 저장 후 메시지 초기화
         } catch (err) {
             console.error(err);
             alert("수정 중 오류가 발생했습니다.");
