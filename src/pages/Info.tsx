@@ -54,7 +54,7 @@
 
 // export default Info;
 
-import { useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import styles from "../css/pages/Info.module.css";
 import useAuthStore from "../store/AuthStore";
 import { useNavigate } from "react-router-dom";
@@ -62,6 +62,7 @@ import api from "../api";
 
 const Info = () => {
     const { isAuthenticated, user, accessToken } = useAuthStore();
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
     const username = user?.username;
 
     const [nickname, setNickname] = useState("");
@@ -77,6 +78,9 @@ const Info = () => {
     const clearProfileImage = () => {
         setProfileImage(null);
         setPreview(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = ""; // ✅ 파일 input 값도 초기화
+        }
     };
 
     const fetchUserInfo = async () => {
@@ -187,6 +191,7 @@ const Info = () => {
             <form className={styles.form} onSubmit={handleSubmit}>
                 <label className={styles.label}>프로필 사진 변경</label>
                 <input
+                    ref={fileInputRef}
                     type="file"
                     accept="image/*"
                     onChange={(e) =>
