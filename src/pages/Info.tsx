@@ -110,7 +110,8 @@ const Info = () => {
             await fetchUserInfo(newToken);
             toast.success("프로필이 성공적으로 수정되었습니다.");
             clearProfileImage();
-        } catch {
+        } catch (error) {
+            console.error("파일 업로드 실패:", error);
             toast.error("수정 중 오류가 발생했습니다.");
         } finally {
             setLoading(false);
