@@ -11,7 +11,6 @@ const LoginPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const login = useAuthStore((state) => state.login);
-    const updateUser = useAuthStore((state) => state.updateUser);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -36,16 +35,15 @@ const LoginPage: React.FC = () => {
         setIsLoading(true);
 
         try {
+            // 1. 로그인 요청
             const response = await api.post("/api/auth/login", {
                 username,
                 password,
             });
+
             const { accessToken } = response.data;
 
-            // 1단계: accessToken 저장
-            login(accessToken, { username });
-
-            // 2단계: 사용자 정보 받아오기
+            // 2. 사용자 정보 요청
             const userRes = await api.get("/api/user/me", {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
@@ -53,7 +51,9 @@ const LoginPage: React.FC = () => {
             });
 
             const { nickname, profileImageUrl } = userRes.data;
-            updateUser({ username, nickname, profileImageUrl });
+
+            // 3. Zustand 상태 업데이트
+            login(accessToken, username, nickname, profileImageUrl);
 
             setTimeout(() => {
                 setIsLoading(false);

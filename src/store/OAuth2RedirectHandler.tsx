@@ -16,7 +16,7 @@ const OAuth2RedirectHandler: React.FC = () => {
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
         const accessToken = queryParams.get("accessToken");
-        const username = queryParams.get("username"); // ✅ 추가
+        const username = queryParams.get("username");
         const error = queryParams.get("error");
 
         if (accessToken) {
@@ -30,15 +30,13 @@ const OAuth2RedirectHandler: React.FC = () => {
                         },
                     });
 
-                    const data = res.data;
+                    const { username, nickname, profileImageUrl } = res.data;
 
                     login(
                         accessToken,
-                        {
-                            username: data.username,
-                            nickname: data.nickname,
-                            profileImageUrl: data.profileImageUrl,
-                        },
+                        username,
+                        nickname,
+                        profileImageUrl,
                         true
                     );
                     setKakaoLoginStatus(true);
@@ -49,7 +47,13 @@ const OAuth2RedirectHandler: React.FC = () => {
                     );
 
                     if (username) {
-                        login(accessToken, { username }, true);
+                        login(
+                            accessToken,
+                            username,
+                            undefined,
+                            undefined,
+                            true
+                        );
                         setKakaoLoginStatus(true);
                         navigate("/");
                     } else {
