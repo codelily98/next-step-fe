@@ -129,7 +129,7 @@ interface AuthState {
     isAuthenticated: boolean;
     user: User | null;
     isKakaoLogin: boolean;
-    login: (accessToken: string, user: User) => void;
+    login: (accessToken: string, user: User, isKakaoLogin?: boolean) => void;
     logout: () => Promise<void>;
     setAccessToken: (token: string) => void;
     setKakaoLoginStatus: (status: boolean) => void;
@@ -145,17 +145,14 @@ const useAuthStore = create<AuthState>()(
             user: null,
             isKakaoLogin: false,
 
-            login: (accessToken, user) => {
+            login: (accessToken, user, isKakaoLogin = false) => {
                 set({
                     accessToken,
                     isAuthenticated: true,
                     user,
-                    isKakaoLogin: false,
+                    isKakaoLogin,
                 });
-                console.log(
-                    "\uB85C\uADF8\uC778 \uC131\uACF5. \uC0AC\uC6A9\uC790:",
-                    user
-                );
+                console.log("로그인 성공. 사용자:", user);
             },
 
             setAccessToken: (token: string) => {
@@ -168,10 +165,7 @@ const useAuthStore = create<AuthState>()(
 
             updateUser: (newUser) => {
                 set({ user: newUser });
-                console.log(
-                    "\uC0AC\uC6A9\uC790 \uC815\uBCF4 \uC5C5\uB370\uC774\uD2B8:",
-                    newUser
-                );
+                console.log("사용자 정보 업데이트:", newUser);
             },
 
             refreshAccessToken: async () => {
@@ -185,13 +179,10 @@ const useAuthStore = create<AuthState>()(
                     );
                     const newAccessToken = res.data.accessToken;
                     set({ accessToken: newAccessToken, isAuthenticated: true });
-                    console.log("Access Token \uAC31\uC2E0 \uC131\uACF5");
+                    console.log("Access Token 갱신 성공");
                     return newAccessToken;
                 } catch (error) {
-                    console.error(
-                        "Access Token \uAC31\uC2E0 \uC2E4\uD328:",
-                        error
-                    );
+                    console.error("Access Token 갱신 실패:", error);
                     set({
                         accessToken: null,
                         isAuthenticated: false,
@@ -214,9 +205,9 @@ const useAuthStore = create<AuthState>()(
                                 },
                             });
                             console.log(
-                                `\uCE74\uCE74\uC624 \uC0AC\uC6A9\uC790 ${
+                                `카카오 사용자 ${
                                     user?.username || "Unknown"
-                                } \uB85C\uADF8\uC544\uC6C3 \uC131\uACF5`
+                                } 로그아웃 성공`
                             );
                         } else {
                             await api.post("/api/auth/logout", null, {
@@ -225,23 +216,18 @@ const useAuthStore = create<AuthState>()(
                                 },
                             });
                             console.log(
-                                `\uC77C\uBC18 \uC0AC\uC6A9\uC790 ${
+                                `일반 사용자 ${
                                     user?.username || "Unknown"
-                                } \uB85C\uADF8\uC544\uC6C3 \uC131\uACF5`
+                                } 로그아웃 성공`
                             );
                         }
                     } else {
-                        console.warn(
-                            "\uB85C\uADF8\uC544\uC6C3 \uC2DC\uB3C4: Access Token\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."
-                        );
+                        console.warn("로그아웃 시도: Access Token이 없습니다.");
                     }
                 } catch (error) {
-                    console.error(
-                        "\uBC31\uC5C5\uC5D0 \uB300\uD55C \uB85C\uADF8\uC544\uC6C3 \uC2E4\uD328:",
-                        error
-                    );
+                    console.error("백엔드에 대한 로그아웃 실패:", error);
                     alert(
-                        "\uB85C\uADF8\uC544\uC6C3 \uCC98\uB9AC \uC911 \uC624\uB958\uAC00 \uBC1C\uC0DD\uD588\uC9C0\uB9CC, \uD074\uB77C\uC774\uC5B8\uD2B8 \uC138\uC158\uC774 \uC885\uB8CC\uB429\uB2C8\uB2E4."
+                        "로그아웃 처리 중 오류가 발생했지만, 클라이언트 세션이 종료됩니다."
                     );
                 } finally {
                     set({
@@ -250,9 +236,7 @@ const useAuthStore = create<AuthState>()(
                         user: null,
                         isKakaoLogin: false,
                     });
-                    console.log(
-                        "\uD074\uB77C\uC774\uC5B8\uD2B8 \uB85C\uADF8\uC544\uC6C3 \uC0C1\uD0DC \uCD08\uAE30\uD654."
-                    );
+                    console.log("클라이언트 로그아웃 상태 초기화.");
                     window.location.href = "/login";
                 }
             },
