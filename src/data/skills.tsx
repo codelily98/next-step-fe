@@ -61,6 +61,20 @@ export const categorizedSkills: SkillCategory[] = [
                 link: "https://reactjs.org/",
             },
             {
+                name: "CSS Module",
+                description:
+                    "컴포넌트 단위로 스타일을 관리할 수 있는 CSS 모듈화 기법입니다.",
+                logo: "https://upload.wikimedia.org/wikipedia/commons/d/d5/CSS3_logo_and_wordmark.svg", // 대체 가능한 CSS3 로고
+                link: "https://github.com/css-modules/css-modules",
+            },
+            {
+                name: "Zustand",
+                description:
+                    "React를 위한 가볍고 직관적인 상태 관리 라이브러리입니다.",
+                logo: "https://zustand-demo.pmnd.rs/zustand-logo.svg",
+                link: "https://github.com/pmndrs/zustand",
+            },
+            {
                 name: "JSP",
                 description: "Java 기반의 서버 사이드 템플릿 기술입니다.",
                 logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg",
@@ -167,6 +181,13 @@ export const categorizedSkills: SkillCategory[] = [
                     "자동화된 CI/CD 파이프라인 구축을 위한 도구입니다.",
                 logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jenkins/jenkins-original.svg",
                 link: "https://www.jenkins.io/",
+            },
+            {
+                name: "GitHub Actions",
+                description:
+                    "GitHub에서 제공하는 CI/CD 플랫폼으로, 저장소의 워크플로우를 자동화할 수 있습니다.",
+                logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg",
+                link: "https://github.com/features/actions",
             },
             {
                 name: "Nginx",
