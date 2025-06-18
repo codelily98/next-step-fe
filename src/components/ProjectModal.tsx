@@ -269,14 +269,20 @@ const ProjectModal = ({ project, onClose }: Props) => {
                     </p>
                     <p>
                         <strong>🔗 GitHub</strong>{" "}
-                        <a
-                            className={styles.url}
-                            href={project.github}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            {project.github}
-                        </a>
+                        <ul>
+                            {project.github.map((url, index) => (
+                                <li key={index}>
+                                    <a
+                                        className={styles.url}
+                                        href={url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {url}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
                     </p>
                     <p>
                         <strong>📱 기술스택</strong>

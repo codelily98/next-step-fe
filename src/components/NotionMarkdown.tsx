@@ -35,14 +35,20 @@ const NotionMarkdown: React.FC<NotionMarkdownProps> = ({
                 </div>
                 <div className={styles.metadataItem}>
                     <span className={styles.metadataLabel}>GitHub:</span>
-                    <a
-                        href={project.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles.link}
-                    >
-                        {project.github}
-                    </a>
+                    <ul className={styles.linkList}>
+                        {project.github.map((url, index) => (
+                            <li key={index}>
+                                <a
+                                    href={url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={styles.link}
+                                >
+                                    {url}
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             </div>
 
