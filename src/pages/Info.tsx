@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../api";
 
 const Info = () => {
-    const { isAuthenticated, user, accessToken, setAccessToken, login } =
+    const { isAuthenticated, user, accessToken, setAccessToken } =
         useAuthStore();
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const username = user?.username;
