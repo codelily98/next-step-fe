@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { projects, Project } from "../data/projects";
+import { motion } from "framer-motion";
 import ProjectModal from "../components/ProjectModal";
 import styles from "../css/pages/Projects.module.css";
 
@@ -8,15 +9,20 @@ const Projects = () => {
         null
     );
 
-    // const [isCreatePostOpen, setIsCreatePostOpen] = useState(false); // 글쓰기 모달 열림 여부
-
-    // const handleCreatePost = () => {
-    //     setIsCreatePostOpen(true);
-    // };
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     return (
         <section className={styles.container}>
-            <h2 className={styles.title}>프로젝트 포트폴리오</h2>
+            <motion.h2
+                className={styles.title}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+            >
+                프로젝트 포트폴리오
+            </motion.h2>
             <div className={styles.grid}>
                 {projects.map((project) => (
                     <div
@@ -37,18 +43,6 @@ const Projects = () => {
                     onClose={() => setSelectedProject(null)}
                 />
             )}
-
-            {/* 글쓰기 버튼 
-            <button className={styles.writeButton} onClick={handleCreatePost}>
-                글쓰기
-            </button>
-            */}
-
-            {/* 글쓰기 모달
-            {isCreatePostOpen && (
-                <CreatePost onClose={() => setIsCreatePostOpen(false)} />
-            )}
-            */}
         </section>
     );
 };

@@ -253,6 +253,8 @@ const ProjectModal = ({ project, onClose }: Props) => {
 
     useEffect(() => {
         setContentElements(parseMarkdownContent(project.content));
+
+        window.scrollTo(0, 0);
     }, [project.content]);
 
     return (

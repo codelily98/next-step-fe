@@ -13,6 +13,7 @@ const About = () => {
     };
 
     useEffect(() => {
+        window.scrollTo(0, 0);
         document.body.style.backgroundColor = "#000";
         return () => {
             document.body.style.backgroundColor = "";

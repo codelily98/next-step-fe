@@ -18,6 +18,7 @@
     "axios": "^1.9.0",
     "date-fns": "^4.1.0",
     "dompurify": "^3.2.5",
+    "framer-motion": "^12.18.1",
     "html-react-parser": "^5.2.3",
     "middleware": "^1.0.0",
     "react": "^19.0.0",

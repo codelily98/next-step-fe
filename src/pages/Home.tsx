@@ -8,7 +8,7 @@ const Home = () => {
     const username = user?.username; // user가 null일 경우를 대비하여 옵셔널 체이닝 사용
 
     useEffect(() => {
-        // About 페이지 진입 시
+        window.scrollTo(0, 0);
         document.body.style.backgroundColor = "#111";
 
         // 페이지를 벗어날 때 배경 초기화 (원래 색으로 되돌리기)

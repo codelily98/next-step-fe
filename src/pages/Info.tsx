@@ -15,6 +15,8 @@ const Info = () => {
             alert("로그인이 필요한 서비스입니다.");
             navigate("/login");
         }
+
+        window.scrollTo(0, 0);
     });
 
     return (
