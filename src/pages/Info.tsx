@@ -1,9 +1,10 @@
-// ✅ Info.tsx (FE 전체 코드 수정)
 import { useRef, useEffect, useState } from "react";
 import styles from "../css/pages/Info.module.css";
 import useAuthStore from "../store/AuthStore";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Info = () => {
     const { isAuthenticated, user, accessToken, setAccessToken, login } =
@@ -14,9 +15,8 @@ const Info = () => {
     const [nickname, setNickname] = useState("");
     const [profileImage, setProfileImage] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
-    const [success, setSuccess] = useState<string | null>(null);
-    const [error, setError] = useState<string | null>(null);
     const [checking, setChecking] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -34,14 +34,14 @@ const Info = () => {
             const { username, nickname, profileImageUrl } = res.data;
             login(token, { username, nickname, profileImageUrl });
             setNickname(nickname || "");
-        } catch (err) {
-            console.error("사용자 정보 불러오기 실패", err);
+        } catch {
+            toast.error("사용자 정보를 불러오는 데 실패했습니다.");
         }
     };
 
     useEffect(() => {
         if (!isAuthenticated) {
-            alert("로그인이 필요한 서비스입니다.");
+            toast.warn("로그인이 필요한 서비스입니다.");
             navigate("/login");
             return;
         }
@@ -62,8 +62,7 @@ const Info = () => {
     const validateNickname = async (): Promise<boolean> => {
         const trimmed = nickname.trim();
         if (trimmed.length < 2 || trimmed.length > 15) {
-            setError("닉네임은 2자 이상 15자 이하여야 합니다.");
-            setSuccess(null);
+            toast.error("닉네임은 2자 이상 15자 이하여야 합니다.");
             return false;
         }
 
@@ -74,15 +73,13 @@ const Info = () => {
                 { nickname: trimmed },
                 { headers: { Authorization: `Bearer ${accessToken}` } }
             );
-            setSuccess(res.data);
-            setError(null);
+            toast.success(res.data);
             return true;
-        } catch (err: any) {
-            setSuccess(null);
-            if (err.response?.status === 409) {
-                setError("이미 사용 중인 닉네임입니다.");
+        } catch (err: unknown) {
+            if ((err as any).response?.status === 409) {
+                toast.error("이미 사용 중인 닉네임입니다.");
             } else {
-                setError("닉네임 확인 중 오류가 발생했습니다.");
+                toast.error("닉네임 확인 중 오류가 발생했습니다.");
             }
             return false;
         } finally {
@@ -100,6 +97,7 @@ const Info = () => {
         if (profileImage) formData.append("profileImage", profileImage);
 
         try {
+            setLoading(true);
             const res = await api.put("/api/user", formData, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
@@ -110,17 +108,18 @@ const Info = () => {
             const { accessToken: newToken } = res.data;
             setAccessToken(newToken);
             await fetchUserInfo(newToken);
-            setSuccess("정보가 성공적으로 수정되었습니다.");
-            setError(null);
+            toast.success("프로필이 성공적으로 수정되었습니다.");
             clearProfileImage();
-        } catch (err) {
-            console.error(err);
-            alert("수정 중 오류가 발생했습니다.");
+        } catch {
+            toast.error("수정 중 오류가 발생했습니다.");
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className={styles.container}>
+        <div className={`${styles.container} fade-in`}>
+            <ToastContainer position="top-center" autoClose={2000} />
             <h1 className={styles.h1}>
                 <span className={styles.strong}>{username}</span>님
                 {user?.profileImageUrl && (
@@ -139,11 +138,40 @@ const Info = () => {
                 <input
                     ref={fileInputRef}
                     type="file"
-                    accept="image/*"
-                    onChange={(e) =>
-                        setProfileImage(e.target.files?.[0] || null)
-                    }
+                    accept="image/jpeg,image/png,image/webp,image/gif"
                     className={styles.input}
+                    onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+
+                        const maxSizeMB = 50;
+                        const allowedTypes = [
+                            "image/jpeg",
+                            "image/png",
+                            "image/webp",
+                            "image/gif",
+                        ];
+
+                        if (!allowedTypes.includes(file.type)) {
+                            toast.error(
+                                "JPG, PNG, WEBP, GIF 형식만 업로드 가능"
+                            );
+                            e.target.value = "";
+                            setProfileImage(null);
+                            return;
+                        }
+
+                        if (file.size > maxSizeMB * 1024 * 1024) {
+                            toast.error(
+                                "50MB 이하의 이미지만 업로드 가능합니다."
+                            );
+                            e.target.value = "";
+                            setProfileImage(null);
+                            return;
+                        }
+
+                        setProfileImage(file);
+                    }}
                 />
 
                 {preview && (
@@ -172,16 +200,14 @@ const Info = () => {
                     className={styles.input}
                 />
 
-                {checking && (
-                    <p className={styles.checking}>닉네임 중복 확인 중...</p>
-                )}
-                {error && <p className={styles.error}>{error}</p>}
-                {success && !error && (
-                    <p className={styles.success}>{success}</p>
-                )}
+                {checking && <p className={styles.checking}>중복 확인 중...</p>}
 
-                <button type="submit" className={styles.button}>
-                    저장
+                <button
+                    type="submit"
+                    className={styles.button}
+                    disabled={loading}
+                >
+                    {loading ? "저장 중..." : "저장"}
                 </button>
             </form>
         </div>

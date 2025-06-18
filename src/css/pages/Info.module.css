@@ -77,19 +77,19 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 1rem;
+    gap: 2rem;
 }
 
 .deleteButton {
-    margin-top: 8px;
     background-color: #ff5555;
     color: white;
     border: none;
-    padding: 6px 12px;
+    padding: 12px 24px;
     border-radius: 6px;
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.2s;
+    border-radius: 50px;
 }
 
 .deleteButton:hover {
@@ -195,6 +195,41 @@
     /* 다만, 가장 강력하게 동작하는 것은 break-all 입니다. */
 }
 
+.fade-in {
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.customFileWrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.uploadButton {
+    background-color: #4ecdc4;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.hiddenInput {
+    display: none;
+}
+
 /* ✅ 반응형 (모바일 대응) */
 @media (max-width: 768px) {
     .container .h1 {
@@ -207,5 +242,12 @@
 
     .container .tokenInfo .p {
         font-size: 0.925rem;
+    }
+
+    .deleteButton {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
     }
 }
