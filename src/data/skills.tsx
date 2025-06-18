@@ -186,7 +186,7 @@ export const categorizedSkills: SkillCategory[] = [
                 name: "GitHub Actions",
                 description:
                     "GitHub에서 제공하는 CI/CD 플랫폼으로, 저장소의 워크플로우를 자동화할 수 있습니다.",
-                logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg",
+                logo: "https://storage.googleapis.com/next-step-assets/icon/githubactions.png",
                 link: "https://github.com/features/actions",
             },
             {
