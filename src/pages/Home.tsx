@@ -5,7 +5,7 @@ import useAuthStore from "../store/AuthStore";
 const Home = () => {
     // AuthStore에서 필요한 상태들을 가져옵니다.
     const { isAuthenticated, user } = useAuthStore();
-    const username = user?.username; // user가 null일 경우를 대비하여 옵셔널 체이닝 사용
+    const nickname = user?.nickname; // user가 null일 경우를 대비하여 옵셔널 체이닝 사용
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -32,7 +32,7 @@ const Home = () => {
 
             {/* ⭐ 로그인 상태에 따라 다른 환영 메시지 표시 ⭐ */}
             <h1 className={styles.h1}>
-                {isAuthenticated && username ? (
+                {isAuthenticated && nickname ? (
                     <>
                         {/* ✅ 프로필 이미지 표시 */}
                         {user?.profileImageUrl && (
@@ -44,7 +44,7 @@ const Home = () => {
                                 />
                             </div>
                         )}
-                        <span className={styles.strong}>{username}</span>님,
+                        <span className={styles.strong}>{nickname}</span>님,
                         환영합니다!
                     </>
                 ) : (
