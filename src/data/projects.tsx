@@ -178,12 +178,13 @@ export const projects: Project[] = [
 - 캘린더 API 설계 및 구현
 - 회원(일반/달인) 전체 기능 구현
 - 달인 찾기 전체 기능 구현
-**백엔드 지원**
+**백엔드 개발**
 - ERD 작성
 - Flow Chart 작성
 - 웹페이지 백로그 작성
+- 회원기능 구현
 **CI/CD**
-- NCP Server에 Docker와 Jenkins를 이용한 FE 배포
+- NCP Server에 Docker와 Jenkins를 이용한 FE/BE 배포
 
 ## 기술적 성과
 - JWT를 이용한 로그인 정보 저장
